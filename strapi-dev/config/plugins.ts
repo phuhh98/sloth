@@ -1,7 +1,9 @@
-import type { Core } from '@strapi/strapi';
+import type { Core } from "@strapi/strapi";
 import NodeMailerProvider from "@strapi/provider-email-nodemailer";
 
-const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Plugin => ({
+const config = ({
+  env,
+}: Core.Config.Shared.ConfigParams): Core.Config.Plugin => ({
   // Upload provider https://docs.strapi.io/cloud/advanced/upload
   upload: {
     config: {
@@ -13,7 +15,7 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Plugin =>
     },
   },
 
-      // Email config https://docs.strapi.io/cms/features/email
+  // Email config https://docs.strapi.io/cms/features/email
   // Node mailer provider https://market.strapi.io/providers/@strapi-provider-email-nodemailer
   email: {
     config: {
@@ -42,6 +44,11 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Plugin =>
         defaultReplyTo: "hello@example.com",
       } satisfies Parameters<typeof NodeMailerProvider.init>[1],
     },
+  },
+
+  "cheap-strapi-plugin": {
+    enabled: true,
+    // resolve: "../../../../cheap-strapi-plugin",
   },
 });
 

@@ -13,7 +13,13 @@ tasks:
   install-yalc:
     desc: Install yalc globally
     cmds:
-      - pnpm install -g yalc
+      - yarn global add yalc
+
+  init-link-plugin:
+    desc: Initialize yalc in the plugin and link it to Strapi project
+    dir: strapi-dev
+    cmds:
+      - yalc add --link cheap-strapi-plugin && yarn install
 
   publish-plugin:
     desc: Publish cheap-strapi-plugin to local yalc registry
@@ -25,13 +31,13 @@ tasks:
     desc: Build the plugin
     dir: cheap-strapi-plugin
     cmds:
-      - pnpm build && pnpm verify
+      - yarn build && yarn verify
 
   watch-link-plugin:
     desc: Watch for changes in the plugin and link it to Strapi project
     dir: cheap-strapi-plugin
     cmds:
-      - pnpm run watch:link
+      - yarn run watch:link
 
   # Development environment tasks
   start-dev-all:
@@ -54,7 +60,7 @@ tasks:
   cheap-plugin-cmd:
     desc: |
       Forward CLI args to any tool from cheap-strapi-plugin folder (usage: task cheap-plugin-cmd -- <tool> [args])
-      Examples: task cheap-plugin-cmd -- pnpm install <pkg>, task cheap-plugin-cmd -- pnpm run build
+      Examples: task cheap-plugin-cmd -- yarn install <pkg>, task cheap-plugin-cmd -- yarn run build
     dir: ./cheap-strapi-plugin
     cmds:
       - "{{.CLI_ARGS}}"
@@ -63,7 +69,7 @@ tasks:
   start-strapi-dev:
     desc: Start Strapi service in development mode
     dir: ./strapi-dev
-    cmds: ["pnpm run develop"]
+    cmds: ["yarn run develop"]
 
   run-dev-processes:
     desc: Run watch-link-plugin and Strapi dev as child processes and stop both on Ctrl+C
@@ -140,4 +146,4 @@ tasks:
     internal: true
     desc: Start frontend in development mode
     dir: ./frontend
-    cmds: ["pnpm run dev"]
+    cmds: ["yarn run dev"]
