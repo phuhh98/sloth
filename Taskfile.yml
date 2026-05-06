@@ -1,0 +1,143 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: "3"
+
+dotenv:
+  - .env # Highest priority for local development
+  - .env.local # Local developer overrides
+  - .env.{{.ENV}} # Environment-specific settings
+  - .env.example # Base example (lowest priority)
+
+tasks:
+  # Plugin related tasks
+  install-yalc:
+    desc: Install yalc globally
+    cmds:
+      - pnpm install -g yalc
+
+  publish-plugin:
+    desc: Publish cheap-strapi-plugin to local yalc registry
+    dir: cheap-strapi-plugin
+    cmds:
+      - yalc publish
+
+  build-plugin:
+    desc: Build the plugin
+    dir: cheap-strapi-plugin
+    cmds:
+      - pnpm build && pnpm verify
+
+  watch-link-plugin:
+    desc: Watch for changes in the plugin and link it to Strapi project
+    dir: cheap-strapi-plugin
+    cmds:
+      - pnpm run watch:link
+
+  # Development environment tasks
+  start-dev-all:
+    desc: |
+      Start development environment
+      and open Dozzle dashboard, Mailhog and Strapi in the browser
+    deps:
+      - compose-up-all-except-strapi
+      - open-dozzle
+      - open-mailhog
+      - open-strapi
+    cmds:
+      - task: run-dev-processes
+
+  stop-dev-all:
+    desc: Stop development environment
+    deps:
+      - compose-down-all
+
+  cheap-plugin-cmd:
+    desc: |
+      Forward CLI args to any tool from cheap-strapi-plugin folder (usage: task cheap-plugin-cmd -- <tool> [args])
+      Examples: task cheap-plugin-cmd -- pnpm install <pkg>, task cheap-plugin-cmd -- pnpm run build
+    dir: ./cheap-strapi-plugin
+    cmds:
+      - "{{.CLI_ARGS}}"
+
+  # Internal tasks
+  start-strapi-dev:
+    desc: Start Strapi service in development mode
+    dir: ./strapi-dev
+    cmds: ["pnpm run develop"]
+
+  run-dev-processes:
+    desc: Run watch-link-plugin and Strapi dev as child processes and stop both on Ctrl+C
+    cmds:
+      - |
+        bash -s <<'BASH'
+        set -euo pipefail
+
+        task watch-link-plugin &
+        WATCH_PID=$!
+
+        task start-strapi-dev &
+        STRAPI_PID=$!
+
+        cleanup() {
+          kill "$WATCH_PID" "$STRAPI_PID" 2>/dev/null || true
+          wait "$WATCH_PID" 2>/dev/null || true
+          wait "$STRAPI_PID" 2>/dev/null || true
+        }
+
+        trap cleanup INT TERM EXIT
+        wait "$WATCH_PID" "$STRAPI_PID"
+        BASH
+
+  open-strapi:
+    internal: true
+    desc: Open Strapi admin panel in the browser, open with Chrome else fallback to default browser
+    cmds:
+      [
+        'open -a "Google Chrome" http://localhost:1337 || open http://localhost:1337',
+      ]
+
+  open-mailhog:
+    internal: true
+    desc: Open Mailhog in the browser, open with Chrome else fallback to default browser
+    cmds:
+      [
+        'open -a "Google Chrome" http://localhost:8025 || open http://localhost:8025',
+      ]
+
+  open-dozzle:
+    internal: true
+    desc: Open Dozzle in the browser, open with Chrome else fallback to default browser
+    cmds:
+      [
+        'open -a "Google Chrome" http://localhost:8080 || open http://localhost:8080',
+      ]
+
+  compose-up-all:
+    internal: true
+    desc: Start all services using docker-compose
+    cmds:
+      - docker-compose up -d
+
+  compose-up-all-except-strapi:
+    internal: true
+    desc: Start all services except Strapi using docker-compose
+    cmds:
+      - docker-compose up -d strapiDB dozzle mailserver
+
+  compose-build-all:
+    internal: true
+    desc: Build all services using docker-compose
+    cmds:
+      - docker-compose build
+
+  compose-down-all:
+    internal: true
+    desc: Stop all services using docker-compose
+    cmds:
+      - docker-compose down
+
+  start-frontend-dev:
+    internal: true
+    desc: Start frontend in development mode
+    dir: ./frontend
+    cmds: ["pnpm run dev"]
