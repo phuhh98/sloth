@@ -1,0 +1,24 @@
+{
+  "$schema": "https://phuhh98.github.io/sloth/schemas/component-contract/0.0.1/schema.json",
+  "name": "hero-banner",
+  "label": "Hero Banner",
+  "kind": "section",
+  "version": "0.0.1",
+  "schemaVersion": "0.0.1",
+  "dataset": [
+    {
+      "key": "headline",
+      "label": "Headline",
+      "type": "string",
+      "required": true
+    },
+    {
+      "key": "subheadline",
+      "label": "Subheadline",
+      "type": "string"
+    }
+  ],
+  "renderMeta": {
+    "rendererKey": "hero-banner"
+  }
+}

@@ -26,6 +26,21 @@ It should support:
 - delivery of shadcn/base UI compatible files into project folders
 - optional future paid and private package workflows
 
+## 1.1) Near-Term Delivery Approach (Component Hub First)
+
+Before a standalone registry API is introduced, sloth should use `packages/component-hub` as the source of truth for component registry artifacts.
+
+Near-term approach:
+
+- source release-versioned contracts and release manifests from `component-hub`
+- copy generated immutable artifacts into docs static hosting path:
+  - `apps/docs/static/registry/contracts/`
+- publish through GitHub Pages as static JSON endpoints
+
+This enables an immediate usable registry surface without introducing API, auth, or billing complexity.
+
+Detailed implementation steps are captured in `docs/COMPONENT-HUB-DOCS-INTEGRATION.md`.
+
 ## 2) Difficulty Assessment
 
 Short answer:
@@ -146,7 +161,9 @@ Before public launch, enforce:
 
 Phase 1: Free public registry MVP
 
-- metadata API + immutable artifacts + checksum verification
+- component-hub sourced immutable artifacts hosted from docs static path
+- static index endpoints for namespace/components/themes/packs
+- checksum verification and richer metadata API can be added in next increment
 
 Phase 2: Private packages
 

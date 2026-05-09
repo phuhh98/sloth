@@ -25,13 +25,13 @@ tasks:
     desc: Start docs site development server (http://localhost:3000)
     dir: ./apps/docs
     cmds:
-      - pnpm start
+      - pnpm run start
 
   build-docs:
     desc: Build docs site for production
     dir: ./apps/docs
     cmds:
-      - pnpm build
+      - pnpm run build
 
   # Development environment tasks
   start-dev-all:

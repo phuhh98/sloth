@@ -4,6 +4,10 @@
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
+    "registry:prepare": "pnpm --filter @sloth/component-hub run build:registry && node ./scripts/sync-component-hub-registry.mjs",
+    "test:registry": "node --test ./scripts/*.test.mjs",
+    "prestart": "pnpm run registry:prepare",
+    "prebuild": "pnpm run registry:prepare",
     "start": "docusaurus start",
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
@@ -26,6 +30,7 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@sloth/component-hub": "workspace:*",
     "@docusaurus/module-type-aliases": "3.10.1",
     "@docusaurus/tsconfig": "3.10.1",
     "@docusaurus/types": "3.10.1",

@@ -7,6 +7,8 @@
 # Generated files
 .docusaurus
 .cache-loader
+static/registry/*
+!static/registry/state.json
 
 # Misc
 .DS_Store

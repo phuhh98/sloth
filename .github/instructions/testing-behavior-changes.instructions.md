@@ -6,6 +6,8 @@ applyTo:
   - "**/*.tsx"
   - "**/*.js"
   - "**/*.jsx"
+  - "**/*.mjs"
+  - "**/*.cjs"
   - "**/*.go"
 ---
 
@@ -18,5 +20,7 @@ applyTo:
   - integration tests for module boundaries and framework wiring
 - Cover both expected behavior and key edge cases that could regress.
 - If behavior changes intentionally, update existing tests to match the new contract and remove outdated assertions.
+- When creating a custom script (for example under a `scripts/` folder), add a corresponding automated test file in the same change.
+- Custom script tests should verify the script's branching or argument-handling behavior and be included in the package test runner.
 - If a module is currently hard to test, add a brief note in the change explaining constraints and propose a near-term testability improvement.
 - Avoid shipping behavior changes with no test evidence unless explicitly requested by the user.

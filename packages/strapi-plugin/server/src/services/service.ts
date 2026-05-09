@@ -14,17 +14,18 @@ type ContractInput = {
 const PLUGIN_NAME = 'sloth-strapi-plugin';
 const COMPONENT_UID = 'plugin::sloth-strapi-plugin.component';
 const PAGE_UID = 'plugin::sloth-strapi-plugin.page';
-const DEFAULT_SCHEMA_VERSION = '1.0.0';
+const DEFAULT_SCHEMA_VERSION = '0.0.1';
 const DEFAULT_PLUGIN_VERSION = '0.0.0';
 const SCHEMA_INSPECTION_PATH = '/sloth/inspection/contract-schema';
 
 const COMPONENT_CONTRACT_SCHEMA = {
   $schema: 'https://json-schema.org/draft/2020-12/schema',
-  $id: 'https://phuhh98.github.io/sloth/schemas/sloth/component-contract/1.0.0/schema.json',
+  $id: 'https://phuhh98.github.io/sloth/schemas/component-contract/0.0.1/schema.json',
   title: 'Sloth Component Contract',
   type: 'object',
   required: ['name', 'label', 'kind', 'version', 'schemaVersion'],
   properties: {
+    $schema: { type: 'string' },
     name: { type: 'string' },
     label: { type: 'string' },
     kind: { type: 'string', enum: ['layout', 'section', 'block'] },

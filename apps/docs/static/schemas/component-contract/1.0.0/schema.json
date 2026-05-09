@@ -1,11 +1,14 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://phuhh98.github.io/sloth/schemas/sloth/component-contract/1.0.0/schema.json",
+  "$id": "https://phuhh98.github.io/sloth/schemas/component-contract/1.0.0/schema.json",
   "title": "Sloth Component Contract",
   "type": "object",
   "required": ["name", "label", "kind", "version", "schemaVersion", "dataset"],
   "additionalProperties": false,
   "properties": {
+    "$schema": {
+      "type": "string"
+    },
     "name": {
       "type": "string",
       "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"

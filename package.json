@@ -4,7 +4,8 @@
   "description": "sloth - content management for the lazy",
   "main": "index.js",
   "scripts": {
-    "prepare": "husky"
+    "prepare": "husky",
+    "test:all": "pnpm -r --if-present run test"
   },
   "keywords": [
     "strapi",
@@ -25,6 +26,11 @@
   },
   "lint-staged": {
     "*.{ts,js,jsx,tsx,css,scss}": "prettier --write",
-    "*.json": "prettier --write"
+    "*.json": "prettier --write",
+    "packages/component-hub/**/*.{ts,tsx,js,jsx,mjs,cjs,json}": "sh -c 'pnpm --filter @sloth/component-hub run validate:contracts && pnpm --filter @sloth/component-hub run test'",
+    "apps/docs/**/*.{ts,tsx,js,jsx,mjs,cjs,json,md,mdx}": "sh -c 'pnpm --filter apps-docs run test:registry'",
+    "packages/strapi-plugin/admin/**/*.{ts,tsx,js,jsx,mjs,cjs,json}": "sh -c 'pnpm --filter @sloth/strapi-plugin run test:ts:front'",
+    "packages/strapi-plugin/server/**/*.{ts,tsx,js,jsx,mjs,cjs,json}": "sh -c 'pnpm --filter @sloth/strapi-plugin run test:ts:back'",
+    "packages/strapi-plugin/{package.json,tsconfig.json}": "sh -c 'pnpm --filter @sloth/strapi-plugin run test:ts:front && pnpm --filter @sloth/strapi-plugin run test:ts:back'"
   }
 }

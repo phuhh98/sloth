@@ -69,6 +69,8 @@ Notes:
 
 - depends on stable plugin and CLI contract
 - include rendering strategy decision: sample frontend-only or extracted SDK
+- component-hub should own contract + basic React implementation sources
+- docs build should sync generated release-versioned contract sets into `apps/docs/static/registry/contracts/`
 
 ## Milestone 4
 
@@ -80,6 +82,7 @@ Status: Not Started
 Notes:
 
 - detailed architecture and rollout in docs/REGISTRY.md
+- near-term bootstrap path uses static docs hosting with component-hub generated artifacts before introducing full metadata API
 
 ## Milestone 5
 
