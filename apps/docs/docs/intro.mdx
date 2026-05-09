@@ -2,32 +2,32 @@
 sidebar_position: 1
 ---
 
-# sloth Documentation Hub
+# What is sloth?
 
-This site hosts both documentation and public JSON schema artifacts for sloth.
+sloth is a **page-template platform** built on top of [Strapi](https://strapi.io). It provides the infrastructure for defining, distributing, and rendering page templates across frontend applications — without coupling the page structure to any specific frontend framework.
 
-## What Is Hosted Here
+## Core Ideas
 
-- Product and technical documentation pages under the docs section.
-- Versioned schema files under the static path:
-  - `/schemas/sloth/component-contract/1.0.0/schema.json`
+sloth is organized around three concerns:
 
-## Local Development
+**Component Contracts** — A component contract is a typed, versioned interface that describes what data a frontend component needs and what kind of layout role it plays (`layout`, `section`, or `block`). Contracts are the unit of exchange between the CMS and the frontend renderer.
 
-Run the docs site from the monorepo root:
+**Page Templates** — Pages are composed of component slots bound to CMS content. sloth stores both the editable Puck editor config and an optional compiled shape for efficient frontend delivery.
 
-```bash
-pnpm --filter apps-docs start
-```
+**Distribution** — Contracts can be authored locally using the sloth CLI and pushed to a Strapi host. In the future, contracts and component packs will be distributable through a registry.
 
-Build static output:
+## System Components
 
-```bash
-pnpm --filter apps-docs build
-```
+| Component | Description |
+|-----------|-------------|
+| **Strapi plugin** | Core plugin that owns `component` and `page` content-types, exposes admin and content-API routes, and handles contract ingestion |
+| **Admin UI** | Drag-and-drop page builder (Puck) embedded in the Strapi admin panel |
+| **CLI** | Go-based developer tool for contract operations — validate, sync, push contracts to a Strapi host |
+| **Component Hub** | Reusable themed component variants built on Base UI |
+| **Schema hosting** | This site hosts versioned JSON Schema files used to validate component contracts |
 
-## GitHub Pages URL
+## Current Status
 
-For this repository, the site base URL is:
+sloth is in early development. The Strapi plugin scaffolding, content-types, and core service layer are in progress. The CLI and component hub are planned for later milestones.
 
-- `https://phuhh98.github.io/sloth/`
+See the [Architecture](./architecture) page for a diagram of how the pieces fit together.

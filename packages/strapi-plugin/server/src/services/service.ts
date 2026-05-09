@@ -20,7 +20,7 @@ const SCHEMA_INSPECTION_PATH = '/sloth/inspection/contract-schema';
 
 const COMPONENT_CONTRACT_SCHEMA = {
   $schema: 'https://json-schema.org/draft/2020-12/schema',
-  $id: 'https://schemas.sloth.dev/component-contract/1.0.0',
+  $id: 'https://phuhh98.github.io/sloth/schemas/sloth/component-contract/1.0.0/schema.json',
   title: 'Sloth Component Contract',
   type: 'object',
   required: ['name', 'label', 'kind', 'version', 'schemaVersion'],

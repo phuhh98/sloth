@@ -9,8 +9,7 @@ This page lists stable, versioned schema URLs served by the sloth docs site.
 ## Component Contract
 
 - Version: `1.0.0`
-- Hosted URL:
-  - `https://phuhh98.github.io/sloth/schemas/sloth/component-contract/1.0.0/schema.json`
+- Hosted URL: [https://phuhh98.github.io/sloth/schemas/sloth/component-contract/1.0.0/schema.json](https://phuhh98.github.io/sloth/schemas/sloth/component-contract/1.0.0/schema.json)
 
 ## Notes
 
