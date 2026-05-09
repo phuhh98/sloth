@@ -4,7 +4,7 @@
   "description": "sloth - content management for the lazy",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepare": "husky"
   },
   "keywords": [
     "strapi",
@@ -15,5 +15,16 @@
   ],
   "author": "phuhuynh <phuhh98@gmail.com>",
   "license": "ISC",
-  "packageManager": "pnpm@9.15.9"
+  "packageManager": "pnpm@9.15.9",
+  "devDependencies": {
+    "@commitlint/cli": "^21.0.0",
+    "@commitlint/config-conventional": "^21.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.3",
+    "prettier": "^3.8.3"
+  },
+  "lint-staged": {
+    "*.{ts,js,jsx,tsx,css,scss}": "prettier --write",
+    "*.json": "prettier --write"
+  }
 }
