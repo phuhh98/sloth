@@ -65,16 +65,20 @@ Scope:
 - Build CLI commands: list, inspect, add, verify, push.
 - Implement local .sloth folder conventions and lock metadata.
 - Add compatibility gate, drift checks, dry-run behavior, push pipeline.
+- Package Go CLI binaries for macOS, Linux, and Windows.
+- Distribute CLI through npm with package metadata and platform-aware binary resolution.
 
 Deliverables:
 
 - Reliable contract sync from local to host.
 - Blocking compatibility checks with clear errors.
+- npm-installable CLI package that executes the correct binary by platform.
 
 Exit criteria:
 
 - CLI completes verify -> inspect -> compare -> ingest pipeline safely.
 - Incompatible versions are blocked before write.
+- npm install and first-run command succeed on macOS, Linux, and Windows using published prebuilt binaries.
 
 ## Phase 3: Milestone 3 Component Hub Starter + Renderer Examples
 
@@ -132,6 +136,7 @@ Create ADRs early for these decisions:
 - Runtime payload boundary and first-level data policy.
 - Registry API language and stack.
 - Strict-fail versus warning-first compatibility policy.
+- CLI distribution strategy: npm-delivered prebuilt binaries versus direct go install.
 
 ## Timeline Estimate
 

@@ -48,6 +48,7 @@ Goal:
 
 - build CLI contract list/add/verify/push with robust compatibility checks
 - local contract/set folder conventions + lock file
+- distribute Go CLI via npm package with prebuilt binaries for macOS, Linux, and Windows
 
 Status: Not Started
 Notes:
@@ -56,6 +57,7 @@ Notes:
 - component contract version-gated sync and compatibility-abort behavior documented in docs/COMPONENT-CONTRACTS.md
 - page content operations are intentionally excluded from CLI scope
 - host API is inspection-first; CLI owns verify/compare/push workflow
+- CLI implementation stays in Go + Cobra; npm is the delivery channel for platform binaries and package metadata
 
 ## Milestone 3
 

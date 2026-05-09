@@ -17,7 +17,7 @@ Use this board for detailed execution tracking of one milestone.
 ### Scope
 
 - Milestone: Milestone 2 - CLI Contract Management
-- Goal: Build Go + Cobra CLI contract management commands (list/add/verify/push) with local .sloth workspace and robust compatibility checks
+- Goal: Build Go + Cobra CLI contract management commands (list/add/verify/push) with local .sloth workspace, robust compatibility checks, and npm-based cross-platform binary distribution
 - Constraints: Scope is component contracts only; exclude page content operations and keep milestone under 20 tasks
 - milestone_updated_at: 2026-05-10
 
@@ -166,6 +166,46 @@ Task card format (keep concise):
   - requires-confirmation: true
   - status: todo
 
+- [ ] CLI-016: Add cross-platform Go build and checksum pipeline
+  - what: Build reproducible binaries for darwin, linux, and windows targets.
+  - do: Add build script and release artifact naming with checksums.
+  - next: Wire npm package to consume platform artifacts.
+  - deps: CLI-001
+  - requires-confirmation: false
+  - status: todo
+
+- [ ] CLI-017: Create npm wrapper package for binary distribution
+  - what: Publish CLI through npm while executing platform-specific built binaries.
+  - do: Add package.json metadata, bin entry, and install/runtime resolver for platform binaries.
+  - next: Validate install and execution flow on supported OS targets.
+  - deps: CLI-016
+  - requires-confirmation: false
+  - status: todo
+
+- [ ] CLI-018: Validate npm install flow and release contract
+  - what: Confirm npm-delivered CLI behavior and document release inputs/outputs.
+  - do: Add tests or smoke checks for install/exec and document versioning, artifacts, and publish steps.
+  - next: Gate milestone completion on cross-platform validation.
+  - deps: CLI-017, CLI-015
+  - requires-confirmation: true
+  - status: todo
+
+- [ ] CLI-019: Add Taskfile commands for CLI distribution workflow
+  - what: Provide developer-friendly task commands for build/package/check/release-prep steps.
+  - do: Add Taskfile.yml tasks covering cross-platform binary build, checksum generation, npm package preparation, and local install smoke checks.
+  - next: Document canonical task command usage in CLI docs.
+  - deps: CLI-016, CLI-017
+  - requires-confirmation: false
+  - status: todo
+
+- [ ] CLI-020: Implement config-driven npm publish package generation
+  - what: Avoid maintaining many static per-platform folders by generating publish-ready package directories from one distribution config.
+  - do: Add distribution manifest file in packages/cli and a generator script that emits per-platform package.json + binary layout into dist/publish-packages before pnpm publish.
+  - next: Wire generator into Taskfile publish commands and CI release workflow.
+  - deps: CLI-016, CLI-017, CLI-019
+  - requires-confirmation: false
+  - status: todo
+
 ## In Progress
 
 - [ ] None
@@ -210,6 +250,15 @@ Task card format (keep concise):
 - CLI-012 -> CLI-013
 - CLI-013 -> CLI-014
 - CLI-014 -> CLI-015
+- CLI-001 -> CLI-016
+- CLI-016 -> CLI-017
+- CLI-015 -> CLI-018
+- CLI-017 -> CLI-018
+- CLI-016 -> CLI-019
+- CLI-017 -> CLI-019
+- CLI-016 -> CLI-020
+- CLI-017 -> CLI-020
+- CLI-019 -> CLI-020
 
 ### Notes
 
@@ -217,7 +266,7 @@ Task card format (keep concise):
   - Host API behavior for inspect/push may differ from assumptions and require adapter changes.
   - Compatibility matrix rules may need iterative refinement once real contracts are validated.
 - Decisions:
-  - Keep milestone as one board because total tasks (15) stay within the 20-task limit.
+  - Keep milestone as one board because total tasks (20) stay within the 20-task limit.
   - Keep verification gates before push to reduce invalid host mutations.
 - Next:
   - Start CLI-001.

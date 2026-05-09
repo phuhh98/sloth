@@ -42,6 +42,11 @@ For a requested plugin version, CLI resolves contract schemas from one of two so
 
 Source selection should be explicit via command flags.
 
+Clarification:
+
+- npm in this section refers to where contract artifacts are resolved from.
+- CLI runtime distribution is a separate concern: the CLI implementation is Go + Cobra and may be delivered through an npm package that includes prebuilt binaries per platform.
+
 ## 3) Compatibility Rules
 
 Before writing any contract to Strapi host, CLI must validate compatibility:
