@@ -46,9 +46,8 @@ const config = ({
     },
   },
 
-  "cheap-strapi-plugin": {
+  "slothy-strapi-plugin": {
     enabled: true,
-    // resolve: "../../../../cheap-strapi-plugin",
   },
 });
 

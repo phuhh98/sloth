@@ -61,12 +61,12 @@
   },
   "strapi": {
     "kind": "plugin",
-    "name": "CHEAP",
-    "displayName": "CHEAP",
-    "description": "CHEAP - Composable Hybrid Ecom Assembly for the Poor"
+    "name": "slothy-strapi-plugin",
+    "displayName": "Slothy",
+    "description": "Slothy - Content management for the lazy"
   },
-  "name": "cheap-strapi-plugin",
-  "description": "CHEAP - Composable Hybrid Ecom Assembly for the Poor",
+  "name": "@slothy/strapi-plugin",
+  "description": "Slothy - Content management for the lazy",
   "license": "MIT",
   "author": "phuhuynh <phuhh98@gmail.com>"
 }

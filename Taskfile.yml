@@ -9,35 +9,17 @@ dotenv:
   - .env.example # Base example (lowest priority)
 
 tasks:
-  # Plugin related tasks
-  install-yalc:
-    desc: Install yalc globally
-    cmds:
-      - yarn global add yalc
-
-  init-link-plugin:
-    desc: Initialize yalc in the plugin and link it to Strapi project
-    dir: strapi-dev
-    cmds:
-      - yalc add --link cheap-strapi-plugin && yarn install
-
-  publish-plugin:
-    desc: Publish cheap-strapi-plugin to local yalc registry
-    dir: cheap-strapi-plugin
-    cmds:
-      - yalc publish
-
   build-plugin:
     desc: Build the plugin
-    dir: cheap-strapi-plugin
+    dir: ./packages/strapi-plugin
     cmds:
-      - yarn build && yarn verify
+      - pnpm build && pnpm verify
 
-  watch-link-plugin:
+  watch-plugin:
     desc: Watch for changes in the plugin and link it to Strapi project
-    dir: cheap-strapi-plugin
+    dir: ./packages/strapi-plugin
     cmds:
-      - yarn run watch:link
+      - pnpm run watch
 
   # Development environment tasks
   start-dev-all:
@@ -57,28 +39,28 @@ tasks:
     deps:
       - compose-down-all
 
-  cheap-plugin-cmd:
+  slothy-plugin-cmd:
     desc: |
-      Forward CLI args to any tool from cheap-strapi-plugin folder (usage: task cheap-plugin-cmd -- <tool> [args])
-      Examples: task cheap-plugin-cmd -- yarn install <pkg>, task cheap-plugin-cmd -- yarn run build
-    dir: ./cheap-strapi-plugin
+      Forward CLI args to any tool from slothy-strapi-plugin folder (usage: task slothy-plugin-cmd -- <tool> [args])
+      Examples: task slothy-plugin-cmd -- pnpm install <pkg>, task slothy-plugin-cmd -- pnpm run build
+    dir: ./packages/strapi-plugin
     cmds:
       - "{{.CLI_ARGS}}"
 
   # Internal tasks
   start-strapi-dev:
     desc: Start Strapi service in development mode
-    dir: ./strapi-dev
-    cmds: ["yarn run develop"]
+    dir: ./apps/strapi
+    cmds: ["pnpm run develop"]
 
   run-dev-processes:
-    desc: Run watch-link-plugin and Strapi dev as child processes and stop both on Ctrl+C
+    desc: Run watch-plugin and Strapi dev as child processes and stop both on Ctrl+C
     cmds:
       - |
         bash -s <<'BASH'
         set -euo pipefail
 
-        task watch-link-plugin &
+        task watch-plugin &
         WATCH_PID=$!
 
         task start-strapi-dev &
@@ -145,5 +127,5 @@ tasks:
   start-frontend-dev:
     internal: true
     desc: Start frontend in development mode
-    dir: ./frontend
-    cmds: ["yarn run dev"]
+    dir: ./apps/frontend
+    cmds: ["pnpm run dev"]

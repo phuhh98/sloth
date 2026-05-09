@@ -2,7 +2,7 @@ version: "3"
 services:
   strapi:
     container_name: strapi
-    build: ./strapi-dev
+    build: ./apps/strapi
     image: strapi-dev:latest
     restart: unless-stopped
     env_file: .env
@@ -18,12 +18,12 @@ services:
       APP_KEYS: ${APP_KEYS}
       NODE_ENV: ${NODE_ENV}
     volumes:
-      - ./strapi-dev/config:/opt/app/config
-      - ./strapi-dev/src:/opt/app/src
-      - ./strapi-dev/package.json:/opt/package.json
-      - ./strapi-dev/pnpm-lock.yaml:/opt/pnpm-lock.yaml
+      - ./apps/strapi/config:/opt/app/config
+      - ./apps/strapi/src:/opt/app/src
+      - ./apps/strapi/package.json:/opt/package.json
+      - ./apps/strapi/pnpm-lock.yaml:/opt/pnpm-lock.yaml
       - ./.env:/opt/app/.env
-      - ./strapi-dev/public/uploads:/opt/app/public/uploads
+      - ./apps/strapi/public/uploads:/opt/app/public/uploads
     ports:
       - "1337:1337"
     networks:

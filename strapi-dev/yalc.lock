@@ -1,9 +1,0 @@
-{
-  "version": "v1",
-  "packages": {
-    "cheap-strapi-plugin": {
-      "signature": "b4e5ecd9d1e9adb6208e38d49abaecd9",
-      "link": true
-    }
-  }
-}
