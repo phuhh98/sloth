@@ -141,3 +141,34 @@ tasks:
     desc: Start frontend in development mode
     dir: ./apps/frontend
     cmds: ["pnpm run dev"]
+
+  cli-test:
+    desc: Run Go tests for sloth CLI
+    dir: ./packages/cli
+    cmds:
+      - go test ./...
+
+  cli-build-cross:
+    desc: Build cross-platform sloth CLI binaries and checksums
+    dir: ./packages/cli
+    cmds:
+      - pnpm run build:go
+
+  cli-generate-publish-packages:
+    desc: Generate npm publish package directories from distribution config
+    dir: ./packages/cli
+    cmds:
+      - pnpm run build:publish-packages
+
+  cli-smoke-install:
+    desc: Smoke test npm wrapper execution of local binary
+    dir: ./packages/cli
+    cmds:
+      - pnpm run smoke:install
+
+  cli-release-prep:
+    desc: Prepare CLI release artifacts and run smoke checks
+    deps:
+      - cli-build-cross
+      - cli-generate-publish-packages
+      - cli-smoke-install

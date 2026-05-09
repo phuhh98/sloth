@@ -1,0 +1,8 @@
+# Generated release/build artifacts
+/dist/
+
+# Local workspace data when running CLI from this folder
+/.sloth/
+
+# OS noise
+.DS_Store

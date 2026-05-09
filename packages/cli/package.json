@@ -1,0 +1,24 @@
+{
+  "name": "@sloth/cli",
+  "version": "0.0.1",
+  "private": true,
+  "description": "sloth CLI wrapper for Go binary distribution",
+  "license": "ISC",
+  "type": "module",
+  "bin": {
+    "sloth": "bin/sloth.js"
+  },
+  "files": [
+    "bin",
+    "dist/bin",
+    "dist/publish-packages",
+    "scripts",
+    "distribution.config.json"
+  ],
+  "scripts": {
+    "build:go": "node ./scripts/build-cross.mjs",
+    "build:publish-packages": "node ./scripts/generate-publish-packages.mjs",
+    "smoke:install": "node ./scripts/smoke-install.mjs",
+    "test": "go test ./..."
+  }
+}

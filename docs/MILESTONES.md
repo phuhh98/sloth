@@ -50,7 +50,7 @@ Goal:
 - local contract/set folder conventions + lock file
 - distribute Go CLI via npm package with prebuilt binaries for macOS, Linux, and Windows
 
-Status: Not Started
+Status: Completed
 Notes:
 
 - command shape and sync strategy documented in docs/IDEAS.md
@@ -58,6 +58,11 @@ Notes:
 - page content operations are intentionally excluded from CLI scope
 - host API is inspection-first; CLI owns verify/compare/push workflow
 - CLI implementation stays in Go + Cobra; npm is the delivery channel for platform binaries and package metadata
+- implemented `packages/cli` Go + Cobra scaffold with commands: init, contracts list/inspect/add/verify/push
+- implemented local `.sloth/` workspace init, config profile parsing, lock file management, compatibility checks, and collision detection
+- implemented cross-platform Go binary build pipeline with checksum generation and npm wrapper resolver
+- implemented config-driven publish package generation and Taskfile release-prep commands
+- added CLI tests and public docs page at `apps/docs/docs/cli-contract.md`
 
 ## Milestone 3
 
