@@ -1,5 +1,5 @@
-import { PuzzlePiece } from "@strapi/icons";
+import { LayoutDashboard } from 'lucide-react';
 
-const PluginIcon = () => <PuzzlePiece />;
+const PluginIcon = () => <LayoutDashboard />;
 
 export { PluginIcon };

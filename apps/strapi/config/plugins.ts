@@ -46,7 +46,7 @@ const config = ({
     },
   },
 
-  "slothy-strapi-plugin": {
+  "sloth-strapi-plugin": {
     enabled: true,
   },
 });

@@ -1,1 +1,1 @@
-export const PLUGIN_ID = 'slothy-strapi-plugin';
+export const PLUGIN_ID = 'sloth-strapi-plugin';

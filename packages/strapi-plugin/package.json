@@ -30,7 +30,6 @@
     "test:ts:front": "tsc -p admin/tsconfig.json",
     "test:ts:back": "tsc -p server/tsconfig.json"
   },
-  "dependencies": {},
   "devDependencies": {
     "@strapi/design-system": "^2.2.0",
     "@strapi/icons": "^2.2.0",
@@ -39,7 +38,7 @@
     "@strapi/typescript-utils": "^5.45.0",
     "@types/react": "^18.3.28",
     "@types/react-dom": "^18.3.7",
-    "lucide": "^1.14.0",
+    "lucide-react": "^1.14.0",
     "prettier": "^3.8.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -61,12 +60,12 @@
   },
   "strapi": {
     "kind": "plugin",
-    "name": "slothy-strapi-plugin",
-    "displayName": "Slothy",
-    "description": "Slothy - Content management for the lazy"
+    "name": "sloth-strapi-plugin",
+    "displayName": "Sloth",
+    "description": "Sloth - Content management for the lazy"
   },
-  "name": "@slothy/strapi-plugin",
-  "description": "Slothy - Content management for the lazy",
+  "name": "@sloth/strapi-plugin",
+  "description": "Sloth - Content management for the lazy",
   "license": "MIT",
   "author": "phuhuynh <phuhh98@gmail.com>"
 }

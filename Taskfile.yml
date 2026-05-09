@@ -39,10 +39,10 @@ tasks:
     deps:
       - compose-down-all
 
-  slothy-plugin-cmd:
+  sloth-plugin-cmd:
     desc: |
-      Forward CLI args to any tool from slothy-strapi-plugin folder (usage: task slothy-plugin-cmd -- <tool> [args])
-      Examples: task slothy-plugin-cmd -- pnpm install <pkg>, task slothy-plugin-cmd -- pnpm run build
+      Forward CLI args to any tool from sloth-strapi-plugin folder (usage: task sloth-plugin-cmd -- <tool> [args])
+      Examples: task sloth-plugin-cmd -- pnpm install <pkg>, task sloth-plugin-cmd -- pnpm run build
     dir: ./packages/strapi-plugin
     cmds:
       - "{{.CLI_ARGS}}"

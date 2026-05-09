@@ -1,7 +1,7 @@
 {
-  "name": "slothy",
+  "name": "sloth",
   "version": "0.0.1",
-  "description": "slothy - content management for the lazy",
+  "description": "sloth - content management for the lazy",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,12 +11,9 @@
     "plugin",
     "content management",
     "lazy",
-    "slothy"
+    "sloth"
   ],
   "author": "phuhuynh <phuhh98@gmail.com>",
   "license": "ISC",
-  "packageManager": "pnpm@10.33.2",
-  "engines": {
-    "node": ">=22"
-  }
+  "packageManager": "pnpm@9.15.9"
 }
