@@ -27,8 +27,8 @@
     "watch": "strapi-plugin watch",
     "watch:link": "strapi-plugin watch:link",
     "verify": "strapi-plugin verify",
-    "test:ts:front": "tsc -p admin/tsconfig.json",
-    "test:ts:back": "tsc -p server/tsconfig.json"
+    "test:ts:front": "tsc --noEmit -p admin/tsconfig.json",
+    "test:ts:back": "tsc --noEmit -p server/tsconfig.json"
   },
   "devDependencies": {
     "@strapi/design-system": "^2.2.0",

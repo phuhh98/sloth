@@ -16,6 +16,7 @@ const COMPONENT_UID = 'plugin::sloth-strapi-plugin.component';
 const PAGE_UID = 'plugin::sloth-strapi-plugin.page';
 const DEFAULT_SCHEMA_VERSION = '1.0.0';
 const DEFAULT_PLUGIN_VERSION = '0.0.0';
+const SCHEMA_INSPECTION_PATH = '/sloth/inspection/contract-schema';
 
 const COMPONENT_CONTRACT_SCHEMA = {
   $schema: 'https://json-schema.org/draft/2020-12/schema',
@@ -71,7 +72,7 @@ const service = ({ strapi }: { strapi: Core.Strapi }) => ({
 
     return {
       schemaVersion: resolvedVersion,
-      schemaUrl: `https://schemas.sloth.dev/component-contract/${resolvedVersion}`,
+      schemaUrl: `${SCHEMA_INSPECTION_PATH}?schemaVersion=${encodeURIComponent(resolvedVersion)}&inline=true`,
     };
   },
 
@@ -141,13 +142,13 @@ const service = ({ strapi }: { strapi: Core.Strapi }) => ({
         if (existing.length > 0 && typeof existing[0].documentId === 'string') {
           await strapi.documents(COMPONENT_UID).update({
             documentId: existing[0].documentId,
-            data,
+            data: data as any,
             status: 'draft',
           });
           updated.push(normalizedName);
         } else {
           await strapi.documents(COMPONENT_UID).create({
-            data,
+            data: data as any,
             status: 'draft',
           });
           created.push(normalizedName);

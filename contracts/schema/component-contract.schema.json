@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phuhh98.github.io/sloth/schemas/sloth/component-contract/1.0.0/schema.json",
+  "title": "Sloth Component Contract",
+  "type": "object",
+  "required": ["name", "label", "kind", "version", "schemaVersion", "dataset"],
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "label": {
+      "type": "string",
+      "minLength": 1
+    },
+    "kind": {
+      "type": "string",
+      "enum": ["layout", "section", "block"]
+    },
+    "componentKind": {
+      "type": "string",
+      "description": "Business-purpose classifier such as CTA, Carousel, HeroSection"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+    },
+    "schemaVersion": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string"
+    },
+    "dataset": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["key", "label", "type"],
+        "additionalProperties": false,
+        "properties": {
+          "key": {
+            "type": "string",
+            "pattern": "^[a-zA-Z][a-zA-Z0-9_]*$"
+          },
+          "label": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["string", "number", "option", "dynamic"]
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["label", "value"],
+              "additionalProperties": false,
+              "properties": {
+                "label": { "type": "string" },
+                "value": {}
+              }
+            }
+          },
+          "value": {},
+          "valueDropdown": {
+            "type": "object",
+            "required": ["contentType", "path"],
+            "additionalProperties": false,
+            "properties": {
+              "contentType": { "type": "string" },
+              "path": { "type": "string" },
+              "multiple": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+    "renderMeta": {
+      "type": "object",
+      "required": ["rendererKey"],
+      "additionalProperties": false,
+      "properties": {
+        "rendererKey": { "type": "string" },
+        "supportsChildren": { "type": "boolean" }
+      }
+    }
+  }
+}

@@ -1,0 +1,33 @@
+---
+sidebar_position: 1
+---
+
+# sloth Documentation Hub
+
+This site hosts both documentation and public JSON schema artifacts for sloth.
+
+## What Is Hosted Here
+
+- Product and technical documentation pages under the docs section.
+- Versioned schema files under the static path:
+  - `/schemas/sloth/component-contract/1.0.0/schema.json`
+
+## Local Development
+
+Run the docs site from the monorepo root:
+
+```bash
+pnpm --filter apps-docs start
+```
+
+Build static output:
+
+```bash
+pnpm --filter apps-docs build
+```
+
+## GitHub Pages URL
+
+For this repository, the site base URL is:
+
+- `https://phuhh98.github.io/sloth/`
