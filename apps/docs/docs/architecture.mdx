@@ -34,7 +34,8 @@ flowchart LR
 
   %% Distribution ecosystem
   subgraph X[Distribution Ecosystem]
-    K[Contract Source\nnpm or git]
+    K1[Docusaurus Registry Source\napps/docs/static/registry]
+    K2[Versioned Contract Packages\nfuture: @sloth/* on npm]
     U[Component Hub\nthemes and variants]
     V[Registry API and Artifacts\nfuture]
   end
@@ -56,7 +57,7 @@ flowchart LR
   %% CLI flow
   E --> C
   C --> F
-  C --> K
+  C --> K1
   C --> R2
 
   %% Verification rule
@@ -64,9 +65,16 @@ flowchart LR
   R2 -. ingests verified payloads only .-> S
 
   %% Future ecosystem links
+  U -. publishes versioned contract bundles .-> K2
+  C -. can pull versioned contracts .-> K2
   C -. list/add/update/search .-> V
   U -. publishes packs to .-> V
 ```
+
+## Contract Source and Versioning
+
+- Current source of contract artifacts is the Docusaurus registry files under `apps/docs/static/registry`.
+- Future distribution/version-control path can publish versioned `@sloth/*` contract packages to npm.
 
 ## Actors
 
@@ -78,16 +86,16 @@ flowchart LR
 
 ## Responsibility Boundaries
 
-| Layer | Owned By |
-|-------|----------|
-| Content-types (`component`, `page`) | Strapi plugin |
-| Contract ingestion and validation | Plugin services (ingest + inspection) |
-| Page composition UI | Admin UI (Puck builder) |
-| Page compilation (`puckConfig` → `compiledConfig`) | Plugin compiler service |
-| Contract authoring and local validation | sloth CLI |
-| Public schema artifacts | This documentation site |
-| Reusable component variants | Component Hub (future) |
-| Public/private registry | Registry API (future) |
+| Layer                                              | Owned By                              |
+| -------------------------------------------------- | ------------------------------------- |
+| Content-types (`component`, `page`)                | Strapi plugin                         |
+| Contract ingestion and validation                  | Plugin services (ingest + inspection) |
+| Page composition UI                                | Admin UI (Puck builder)               |
+| Page compilation (`puckConfig` → `compiledConfig`) | Plugin compiler service               |
+| Contract authoring and local validation            | sloth CLI                             |
+| Public schema artifacts                            | This documentation site               |
+| Reusable component variants                        | Component Hub (future)                |
+| Public/private registry                            | Registry API (future)                 |
 
 ## Data Flow: Contract Ingestion
 

@@ -1,6 +1,6 @@
 ---
-purpose: "High-level architecture design diagram for sloth based on product direction in docs/IDEAS.md."
-status: "draft"
+purpose: "Internal architecture summary and pointer to canonical public architecture diagram."
+status: "active"
 owner: "product-and-architecture"
 last_updated: "2026-05-10"
 related_docs:
@@ -8,6 +8,7 @@ related_docs:
   - "docs/MILESTONES.md"
   - "docs/COMPONENT-CONTRACTS.md"
   - "docs/REGISTRY.md"
+  - "apps/docs/docs/architecture.mdx"
 ---
 
 # sloth Architecture Design Diagram
@@ -15,67 +16,13 @@ related_docs:
 Date: 2026-05-10
 Source of truth: docs/IDEAS.md
 
-## High-Level System Architecture
+## Canonical Diagram Source
 
-```mermaid
-flowchart LR
-  %% Actors
-  A[Admin User]
-  D[Frontend Runtime Consumer]
-  E[Developer]
+The canonical architecture diagram lives in:
 
-  %% Local developer workspace
-  subgraph L[Local Project]
-    C[sloth CLI\nGo + Cobra]
-    F[.sloth config and contracts\nconfig.yaml, contracts, sets, lock.json]
-  end
+- `apps/docs/docs/architecture.mdx`
 
-  %% Host system
-  subgraph H[Strapi Host with sloth plugin]
-    B[Admin UI Builder\nPuck + palette + dataset mapping]
-    R1[Admin API\ncomponents/pages/compile]
-    R2[Content API\ninspection + ingest + page delivery]
-    S[Plugin Services\ningest, inspection, compiler, sync]
-    T1[plugin::sloth.component]
-    T2[plugin::sloth.page]
-    G[(Strapi Document Service API)]
-  end
-
-  %% Distribution ecosystem
-  subgraph X[Distribution Ecosystem]
-    K[Contract Source\nnpm or git]
-    U[Component Hub\nthemes and variants]
-    V[Registry API and Artifacts\nfuture]
-  end
-
-  %% Admin flow
-  A --> B
-  B --> R1
-  R1 --> S
-  S --> G
-  G --> T1
-  G --> T2
-
-  %% Runtime flow
-  D --> R2
-  R2 --> S
-  S --> G
-  R2 --> D
-
-  %% CLI flow
-  E --> C
-  C --> F
-  C --> K
-  C --> R2
-
-  %% Verification ownership rule from IDEAS
-  C -. verifies schema, compatibility, and drift before push .-> R2
-  R2 -. ingests verified payloads only .-> S
-
-  %% Future ecosystem links
-  C -. list/add/update/search .-> V
-  U -. publishes packs to .-> V
-```
+Use that file as the single source of truth for the Mermaid diagram and public architecture narrative.
 
 ## Responsibility Boundaries
 
@@ -83,9 +30,16 @@ flowchart LR
 - Host plugin owns ingest and materialization into component records.
 - Runtime delivery endpoint serves page delivery payload and first-level linked content strategy.
 - Registry and component hub are later roadmap phases and remain decoupled from core plugin and CLI MVP.
+- Current contract source is Docusaurus-hosted registry artifacts in `apps/docs/static/registry`.
+- Contract version-control/distribution can evolve to published `@sloth/*` npm packages in a later phase.
 
 ## Architecture Notes
 
 - Keep architecture as a modular monolith around Strapi plugin and CLI during Milestones 1 and 2.
 - Add registry complexity incrementally after stable plugin and CLI contracts are proven.
 - Keep runtime API generic and avoid deep linked-data parsing in plugin runtime.
+
+## Update Rule
+
+- When architecture changes, update `apps/docs/docs/architecture.mdx` first.
+- Update this file only for internal planning context or repo-specific notes not suitable for public docs.
