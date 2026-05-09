@@ -60,9 +60,11 @@ Notes:
 - CLI implementation stays in Go + Cobra; npm is the delivery channel for platform binaries and package metadata
 - implemented `packages/cli` Go + Cobra scaffold with commands: init, contracts list/inspect/add/verify/push
 - implemented local `.sloth/` workspace init, config profile parsing, lock file management, compatibility checks, and collision detection
+- implemented YAML/ENV/default config resolution with explicit precedence for host URL, token, and profile selection
 - implemented cross-platform Go binary build pipeline with checksum generation and npm wrapper resolver
 - implemented config-driven publish package generation and Taskfile release-prep commands
-- added CLI tests and public docs page at `apps/docs/docs/cli-contract.md`
+- added CLI tests and public docs pages at `apps/docs/docs/cli-*.md`
+- **follow-up required:** set up GitHub Actions CI workflow for npm publishing, configure npm publishing credentials, and automate version tagging per release
 
 ## Milestone 3
 
