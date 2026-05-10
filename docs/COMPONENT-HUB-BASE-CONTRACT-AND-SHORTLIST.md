@@ -51,11 +51,17 @@ Shared runtime fields to be modeled consistently across contracts:
 - style tokens: dataset fields `themeTone`, `spacingY`, `containerWidth`
 - data source: optional dynamic dataset fields (`valueDropdown`) for linked content
 - seo contribution boundary:
+  - define one reusable `seo` object in schema `$defs` and reference it from page and contract schemas
   - each contract can expose metadata contribution fields in dataset
   - page-level merge policy is host/runtime responsibility
   - `seo-head` has highest priority for direct page SEO values
+- layout semantics:
+  - `layout` contracts should use a fixed preset set: `header`, `footer`, `content-12cols`, `aside-left`, `aside-right`
+  - `section` contracts should remain full-width within the active layout
+  - `block` contracts should publish a stable `cols`/`rows` span so builders can preview placement consistently across breakpoints
 
 ## Notes
 
 - Current generated release keeps schemaVersion `0.0.1`.
 - New contract families should be introduced as new contract releases to preserve immutability.
+- SEO and layout primitives are intentionally shared so the schema draft, component hub, and page model do not drift apart.

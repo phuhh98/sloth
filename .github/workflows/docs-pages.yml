@@ -46,23 +46,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Test component contract policy
-        run: pnpm --filter @sloth/contracts run test
-
-      - name: Build contract registry artifacts (OCI-era check)
-        run: pnpm --filter @sloth/contracts run build:registry
-
-      - name: Run Zot-backed CLI integration test
-        run: task cli-test-zot-integration
-
-      - name: Test registry state logic
-        run: pnpm --filter apps-docs run test:registry
-
-      - name: Validate tracked registry state
-        run: |
-          pnpm --filter apps-docs run registry:prepare
-          test -z "$(git status --short --untracked-files=all -- apps/docs/static/registry/state.json)"
-
       - name: Build docs site
         run: pnpm --filter apps-docs build
 

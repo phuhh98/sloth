@@ -31,16 +31,12 @@ Goal:
 Status: In Progress
 Notes:
 
-- implemented backend content-types draft in plugin for component and page
-- implemented content-api slice:
-  - `GET /inspection/plugin-status`
-  - `GET /inspection/contract-schema`
-  - `POST /contracts/ingest`
-  - `GET /pages/:id/delivery`
-- current page delivery behavior returns page record payload; first-level linked content population is planned
-- contract ingest currently materializes component records via Document Service API
-- page model intentionally excludes persisted `contractRefs` in current phase
-- remaining work includes admin Puck editor MVP and stronger runtime/delivery enrichment
+- spec-first correction track is now active for contracts, schema semantics, and docs alignment
+- CLI/host boundary remains pull -> verify -> push, with host ingest initiating plugin lifecycle materialization
+- schema revision now needs fixed layout presets, section full-width semantics, block grid-span semantics, and reusable SEO object definitions
+- page model remains minimal for this cycle; persisted `contractRefs` stay deferred unless profiling proves a bottleneck
+- plugin implementation work is intentionally deferred until the revised schema draft and milestone board are approved
+- remaining work in this cycle is documentation and planning only
 
 ## Milestone 2
 

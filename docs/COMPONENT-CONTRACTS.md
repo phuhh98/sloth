@@ -17,7 +17,7 @@ Status: Draft
 
 ## 1) Goal
 
-Enable sloth CLI to push component contracts to a Strapi host based on a target sloth Strapi plugin version.
+Enable sloth CLI to pull remote component contracts and push verified contracts to a Strapi host through the host ingest API.
 
 This feature supports:
 
@@ -29,7 +29,8 @@ This feature supports:
 Boundary rule:
 
 - host API exposes inspection and ingest endpoints
-- CLI owns verification and comparison workflow
+- CLI owns verification, comparison, and push workflow
+- plugin lifecycle behavior materializes components after ingest; it is not part of the CLI contract surface
 
 ## 2) Contract Source Resolution
 
@@ -42,6 +43,11 @@ Near-term distribution model:
 - end users do not interact with ORAS/OCI commands directly
 
 Source selection is internal to CLI and remains abstracted behind `sloth contracts` commands.
+
+OpenAPI note:
+
+- `packages/contracts/openapi/sloth-api.openapi.yaml` is a simulation-oriented integration contract.
+- Host implementations may derive equivalent routes, but the CLI-visible behavior should follow the same inspection and ingest semantics.
 
 Clarification:
 
@@ -91,7 +97,7 @@ Output should include:
 - list of components with general metadata:
   - name
   - label
-  - type
+  - kind
   - contract version
 
 ### 5.2 Add Contracts
@@ -129,14 +135,17 @@ If any check fails, verification returns blocking errors and push/add operations
 
 Notes:
 
-- `contracts push` remains host ingest workflow for Strapi API.
+- `contracts push` remains host ingest workflow for the Strapi API.
 - registry publish operations are internal release automation and not part of end-user command surface.
+- push payloads are expected to be verified before ingest; the host should not expose a separate verify endpoint.
 
 Host APIs for CLI:
 
 - `GET /sloth/inspection/plugin-status`
 - `GET /sloth/inspection/contract-schema?schemaVersion=<version>&inline=<boolean>`
 - `POST /sloth/contracts/ingest`
+
+The ingest endpoint is the plugin boundary where lifecycle materialization begins.
 
 Registry/source flags for end users are intentionally omitted to preserve abstraction.
 

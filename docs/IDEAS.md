@@ -36,6 +36,20 @@ Use explicit naming to avoid confusion between CMS content-type kind and TypeScr
 ```ts
 export type DatasetValueType = "string" | "number" | "option" | "dynamic";
 
+export type LayoutPreset =
+  | "header"
+  | "footer"
+  | "content-12cols"
+  | "aside-left"
+  | "aside-right";
+
+export interface SeoFields {
+  title?: string;
+  description?: string;
+  canonicalUrl?: string;
+  noIndex?: boolean;
+}
+
 export interface ContractDatasetField {
   key: string; // unique within component
   label: string;
@@ -53,23 +67,33 @@ export interface ContractDatasetField {
 export interface ComponentContract {
   name: string; // globally unique slug-like key
   label: string;
-  contentTypeKind: "layout" | "section" | "block";
+  kind: "layout" | "section" | "block";
   category?: string; // optional grouping in builder UI
   version: string; // semver-ish
   schemaVersion: string; // compatible schema track
+  layoutPreset?: LayoutPreset; // required for layout contracts
+  gridSpan?: {
+    cols: number; // visible grid width in the builder
+    rows?: number;
+  };
+  responsiveGrid?: Record<string, { cols: number; rows?: number }>; // layout guidance for previewing breakpoints
   dataset: ContractDatasetField[];
   renderMeta?: {
     // maps to frontend renderer contract
     rendererKey: string;
     supportsChildren?: boolean;
   };
+  seo?: SeoFields;
 }
 ```
 
 Notes:
 
 - Add `key` for each dataset item, not only label.
-- `contentTypeKind` replaces ambiguous `type` naming.
+- `kind` replaces ambiguous `type` naming.
+- `layoutPreset` is a fixed, sloth-owned enum for layout contracts only.
+- `gridSpan` communicates block sizing intent; responsive presentation should remain stable across the common breakpoints unless the layout dictates otherwise.
+- `seo` should be modeled as a reusable object definition and referenced consistently across contract and page schemas.
 - `schemaVersion` is used for compatibility checks.
 - Keep `rendererKey` separate from display `name` to allow renames.
 
@@ -80,7 +104,8 @@ Notes:
 - `Component Contract` is related to `Component` but not one-to-one:
   - a contract can back multiple component records
   - component records can evolve while honoring a stable contract family
-- component records represent business purpose and kind (CTA, Carousel, HeroSection, AsideLayout, Header, Footer), not concrete frontend implementation.
+- component records represent business purpose and kind (CTA, Carousel, HeroSection, Header, Footer), not concrete frontend implementation.
+- layout contracts are implementation-owned by sloth and should stay within the fixed preset set above.
 
 ### 2.2 TypeScript Surfaces
 
@@ -117,11 +142,7 @@ export interface PageTemplate {
   // Optional compiled shape for frontend runtime (faster and safer)
   compiledConfig?: Record<string, unknown>;
 
-  seo?: {
-    title?: string;
-    description?: string;
-    noIndex?: boolean;
-  };
+  seo?: SeoFields;
 }
 ```
 
@@ -129,6 +150,8 @@ Notes:
 
 - Keeping both `puckConfig` and `compiledConfig` is a good design.
 - Treat `puckConfig` as editable source, `compiledConfig` as derived artifact.
+- Reuse the same `SeoFields` object shape at page level and component-contribution level to avoid duplicated SEO schema branches.
+- The builder should show `layoutPreset` and `gridSpan` clearly so authors can understand the contract shape at a glance.
 
 ## 3) Strapi Plugin Scope
 
