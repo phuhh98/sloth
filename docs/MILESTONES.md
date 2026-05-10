@@ -86,8 +86,8 @@ Notes:
 - abandoned release-ledger/manifest migration path in favor of OCI registry strategy
 - adopted GHCR OCI artifact distribution with ORAS-based CLI abstraction for `contracts ls` and `contracts pull`
 - milestone execution board archived at `docs/archive/KANBAN-MILESTONE-3.md`
-- OCI pivot execution is tracked in `docs/KANBAN-OCI-REGISTRY-PIVOT.md`
-- unfinished migration-era tasks (test re-baseline, docs alignment, verification gate) were carried over and refined in `docs/KANBAN-OCI-REGISTRY-PIVOT.md`
+- OCI pivot execution board archived at `docs/archive/KANBAN-OCI-REGISTRY-PIVOT.md`
+- unfinished migration-era tasks (test re-baseline, docs alignment, verification gate) were carried over and refined in `docs/archive/KANBAN-OCI-REGISTRY-PIVOT.md`
 - OCI pivot kickoff completed task OCI-001 (CLI registry config model + precedence tests) and moved OCI-002 (ORAS client implementation) to in-progress
 - OCI pivot implementation completed OCI-002 by adding ORAS-backed OCI list/pull primitives and `--source oci` resolver wiring in CLI; OCI-003 is now in-progress for migration test coverage and path hardening
 - OCI pivot completed OCI-003 and OCI-004 by adding OCI list/add integration coverage, stabilizing localhost OCI behavior, introducing `contracts ls`, and adding `--version` with backward-compatible `--plugin-version`

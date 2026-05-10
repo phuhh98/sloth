@@ -8,12 +8,12 @@ related_docs:
   - "docs/MILESTONES.md"
   - "docs/REGISTRY.md"
   - "docs/IDEAS.md"
-  - "docs/KANBAN-OCI-REGISTRY-PIVOT.md"
+  - "docs/archive/KANBAN-OCI-REGISTRY-PIVOT.md"
 ---
 
 # Milestone Kanban: Contract Release Model Migration
 
-Superseded: This board is abandoned in favor of OCI registry strategy tracked in `docs/KANBAN-OCI-REGISTRY-PIVOT.md`.
+Superseded: This board is abandoned in favor of OCI registry strategy tracked in `docs/archive/KANBAN-OCI-REGISTRY-PIVOT.md`.
 
 Use this board to control migration from source layout `src/contracts/<version>/components/...` to `src/contracts/components/...` while preserving immutable versioned published artifacts.
 

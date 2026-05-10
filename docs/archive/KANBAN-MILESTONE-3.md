@@ -8,12 +8,12 @@ related_docs:
   - "docs/MILESTONES.md"
   - "docs/IDEAS.md"
   - "docs/REGISTRY.md"
-  - "docs/KANBAN-OCI-REGISTRY-PIVOT.md"
+  - "docs/archive/KANBAN-OCI-REGISTRY-PIVOT.md"
 ---
 
 # Milestone Kanban: Milestone 3 - Component Hub Starter + Renderer Examples
 
-Archived: Milestone 3 core scope is complete. OCI pivot and remaining follow-up tasks are tracked in `docs/KANBAN-OCI-REGISTRY-PIVOT.md`.
+Archived: Milestone 3 core scope is complete. OCI pivot and remaining follow-up tasks are tracked in `docs/archive/KANBAN-OCI-REGISTRY-PIVOT.md`.
 
 Use this board for detailed execution tracking of one milestone.
 
