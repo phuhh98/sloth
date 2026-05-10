@@ -2,14 +2,9 @@
   "name": "@sloth/component-hub",
   "version": "0.0.1",
   "private": true,
+  "description": "Placeholder package for future component-hub implementation.",
   "type": "module",
   "scripts": {
-    "validate:contracts": "node ./scripts/validate-contract-versions.mjs",
-    "contracts:workflow": "node ./scripts/contract-release-workflow.mjs",
-    "mock:server": "node ./scripts/openapi-mock-server.mjs --port 4010",
-    "test": "node --test ./scripts/*.test.mjs",
-    "build:registry": "node ./scripts/build-registry.mjs",
-    "build:react": "node ./scripts/build-react.mjs",
-    "build": "pnpm run validate:contracts && pnpm run build:registry && pnpm run build:react"
+    "test": "node -e \"console.log('component-hub placeholder: no tests yet')\""
   }
 }

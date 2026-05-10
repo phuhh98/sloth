@@ -1,0 +1,152 @@
+name: Publish GHCR Contract Artifacts
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version to publish (x.y.z or vx.y.z)"
+        required: true
+        type: string
+      dry_run:
+        description: "Build and prepare artifacts without pushing to GHCR"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      contracts_digest: ${{ steps.publish.outputs.contracts_digest }}
+      schema_digest: ${{ steps.publish.outputs.schema_digest }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.13.1
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Resolve release version
+        id: version
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "${{ github.event_name }}" == "release" ]]; then
+            raw_version="${{ github.event.release.tag_name }}"
+          else
+            raw_version="${{ inputs.version }}"
+          fi
+
+          version="${raw_version#v}"
+          if [[ -z "$version" ]]; then
+            echo "Resolved version is empty" >&2
+            exit 1
+          fi
+
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "Resolved version: $version"
+
+      - name: Build registry artifacts
+        run: pnpm --filter @sloth/contracts run build:registry
+
+      - name: Verify docs-hosted schema parity
+        run: pnpm --filter @sloth/contracts run check:schemas:docs -- --version "${{ steps.version.outputs.version }}"
+
+      - name: Build OCI contracts payload
+        run: |
+          set -euo pipefail
+          node ./packages/contracts/scripts/build-oci-release-payload.mjs \
+            --version "${{ steps.version.outputs.version }}" \
+            --out ./packages/contracts/dist/registry/contracts-release.json
+
+      - name: Verify schema artifact path
+        shell: bash
+        run: |
+          set -euo pipefail
+          schema_path="./packages/contracts/src/schemas/component-contract/${{ steps.version.outputs.version }}/schema.json"
+          if [[ ! -f "$schema_path" ]]; then
+            echo "Missing schema artifact: $schema_path" >&2
+            exit 1
+          fi
+
+      - name: Setup ORAS
+        uses: oras-project/setup-oras@v1
+
+      - name: Login to GHCR
+        if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.dry_run) }}
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | oras login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+      - name: Publish OCI artifacts
+        id: publish
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          contracts_ref="ghcr.io/${{ github.repository_owner }}/sloth/contracts:${{ steps.version.outputs.version }}"
+          schema_ref="ghcr.io/${{ github.repository_owner }}/sloth/schemas/component-contract:${{ steps.version.outputs.version }}"
+
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ inputs.dry_run }}" == "true" ]]; then
+            echo "Dry-run mode enabled; skipping push"
+            echo "contracts_digest=dry-run" >> "$GITHUB_OUTPUT"
+            echo "schema_digest=dry-run" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          oras push "$contracts_ref" \
+            ./packages/contracts/dist/registry/contracts-release.json:application/vnd.sloth.contracts.release.v1+json \
+            --annotation "org.opencontainers.image.source=https://github.com/${{ github.repository }}" \
+            --annotation "org.opencontainers.image.version=${{ steps.version.outputs.version }}" \
+            --annotation "org.opencontainers.image.title=sloth-contracts-release" \
+            | tee /tmp/oras-contracts.log
+
+          contracts_digest="$(grep -Eo 'sha256:[a-f0-9]{64}' /tmp/oras-contracts.log | tail -n1)"
+          if [[ -z "$contracts_digest" ]]; then
+            echo "Could not parse contracts digest from oras output" >&2
+            exit 1
+          fi
+
+          oras push "$schema_ref" \
+            ./packages/contracts/src/schemas/component-contract/${{ steps.version.outputs.version }}/schema.json:application/schema+json \
+            --annotation "org.opencontainers.image.source=https://github.com/${{ github.repository }}" \
+            --annotation "org.opencontainers.image.version=${{ steps.version.outputs.version }}" \
+            --annotation "org.opencontainers.image.title=sloth-component-contract-schema" \
+            | tee /tmp/oras-schema.log
+
+          schema_digest="$(grep -Eo 'sha256:[a-f0-9]{64}' /tmp/oras-schema.log | tail -n1)"
+          if [[ -z "$schema_digest" ]]; then
+            echo "Could not parse schema digest from oras output" >&2
+            exit 1
+          fi
+
+          echo "contracts_digest=$contracts_digest" >> "$GITHUB_OUTPUT"
+          echo "schema_digest=$schema_digest" >> "$GITHUB_OUTPUT"
+
+      - name: Publish summary
+        run: |
+          {
+            echo "## GHCR OCI Publish"
+            echo ""
+            echo "- Version: ${{ steps.version.outputs.version }}"
+            echo "- Contracts reference: ghcr.io/${{ github.repository_owner }}/sloth/contracts:${{ steps.version.outputs.version }}"
+            echo "- Contracts digest: ${{ steps.publish.outputs.contracts_digest }}"
+            echo "- Schema reference: ghcr.io/${{ github.repository_owner }}/sloth/schemas/component-contract:${{ steps.version.outputs.version }}"
+            echo "- Schema digest: ${{ steps.publish.outputs.schema_digest }}"
+          } >> "$GITHUB_STEP_SUMMARY"

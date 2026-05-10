@@ -5,12 +5,12 @@ on:
     branches: [main]
     paths:
       - "apps/docs/**"
-      - "packages/component-hub/**"
+      - "packages/contracts/**"
       - ".github/workflows/docs-pages.yml"
   pull_request:
     paths:
       - "apps/docs/**"
-      - "packages/component-hub/**"
+      - "packages/contracts/**"
       - ".github/workflows/docs-pages.yml"
   workflow_dispatch:
 
@@ -47,17 +47,13 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Test component contract policy
-        run: pnpm --filter @sloth/component-hub run test
+        run: pnpm --filter @sloth/contracts run test
 
-      - name: Validate component contract version policy
-        run: |
-          if [ -n "${GITHUB_BASE_REF}" ]; then
-            git fetch origin "${GITHUB_BASE_REF}" --depth=1
-            COMPARE_REF="$(git merge-base HEAD FETCH_HEAD)"
-          else
-            COMPARE_REF="$(git rev-parse HEAD^)"
-          fi
-          pnpm --filter @sloth/component-hub run validate:contracts -- --compare-ref "$COMPARE_REF"
+      - name: Build contract registry artifacts (OCI-era check)
+        run: pnpm --filter @sloth/contracts run build:registry
+
+      - name: Run Zot-backed CLI integration test
+        run: task cli-test-zot-integration
 
       - name: Test registry state logic
         run: pnpm --filter apps-docs run test:registry

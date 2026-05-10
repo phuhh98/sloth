@@ -8,7 +8,7 @@ import {
   computeNextRegistryState,
   REGISTRY_FORMAT_VERSION,
 } from "./registry-state.mjs";
-import { syncRegistry } from "./sync-component-hub-registry.mjs";
+import { syncRegistry } from "./sync-contracts-registry.mjs";
 
 test("starts revisioning at 1 for new registry state", () => {
   const nextState = computeNextRegistryState(

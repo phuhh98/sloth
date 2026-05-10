@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
-    "registry:prepare": "pnpm --filter @sloth/component-hub run build:registry && node ./scripts/sync-component-hub-registry.mjs",
+    "registry:prepare": "pnpm --filter @sloth/contracts run build:registry && pnpm --filter @sloth/contracts run sync:schemas:docs && node ./scripts/sync-contracts-registry.mjs",
     "test:registry": "node --test ./scripts/*.test.mjs",
     "prestart": "pnpm run registry:prepare",
     "prebuild": "pnpm run registry:prepare",
@@ -30,7 +30,7 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "@sloth/component-hub": "workspace:*",
+    "@sloth/contracts": "workspace:*",
     "@docusaurus/module-type-aliases": "3.10.1",
     "@docusaurus/tsconfig": "3.10.1",
     "@docusaurus/types": "3.10.1",

@@ -16,7 +16,7 @@ const sourceRoot = path.resolve(
   "..",
   "..",
   "packages",
-  "component-hub",
+  "contracts",
   "dist",
   "registry",
 );
