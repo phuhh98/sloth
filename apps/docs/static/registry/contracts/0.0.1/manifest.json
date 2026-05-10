@@ -4,7 +4,7 @@
   "components": {
     "article-teaser": {
       "contractPath": "./components/article-teaser/contract.json",
-      "contentHash": "a154f9d74a3efc5f2fc85b93c431d63e35587eb0b8a740543f95ca59e38cc3e5"
+      "contentHash": "2c24eb7b8244ae2a05c0691f645250eea56f96bf20c60193bd40c2219df8d2a4"
     },
     "author-bio": {
       "contractPath": "./components/author-bio/contract.json",

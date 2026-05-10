@@ -26,7 +26,11 @@ async function readComponentContracts(componentsDir) {
 
   const contracts = [];
   for (const componentName of componentNames) {
-    const contractPath = path.join(componentsDir, componentName, "contract.json");
+    const contractPath = path.join(
+      componentsDir,
+      componentName,
+      "contract.json",
+    );
     const contractRaw = await readFile(contractPath, "utf8");
     const contract = JSON.parse(contractRaw);
 
