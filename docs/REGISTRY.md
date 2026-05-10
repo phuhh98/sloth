@@ -26,20 +26,20 @@ It should support:
 - delivery of shadcn/base UI compatible files into project folders
 - optional future paid and private package workflows
 
-## 1.1) Near-Term Delivery Approach (Component Hub First)
+## 1.1) Near-Term Delivery Approach (OCI Registry First)
 
-Before a standalone registry API is introduced, sloth should use `packages/component-hub` as the source of truth for component registry artifacts.
+Before a standalone registry metadata API is introduced, sloth uses OCI artifacts in GitHub Container Registry (GHCR) as the contract distribution backend.
 
 Near-term approach:
 
-- source release-versioned contracts and release manifests from `component-hub`
-- copy generated immutable artifacts into docs static hosting path:
-  - `apps/docs/static/registry/contracts/`
-- publish through GitHub Pages as static JSON endpoints
+- source contracts from `packages/component-hub/src/contracts/components/`
+- package the contract folder as versioned OCI artifacts in GHCR
+- use CLI-level abstraction over OCI internals via contract commands
+- use ORAS Go SDK in CLI for pull/list behavior
 
-This enables an immediate usable registry surface without introducing API, auth, or billing complexity.
+This keeps distribution immutable and CDN-backed while avoiding custom registry API complexity.
 
-Detailed implementation steps are captured in `docs/COMPONENT-HUB-DOCS-INTEGRATION.md`.
+Detailed integration and execution planning is tracked in a dedicated OCI migration kanban.
 
 ## 2) Difficulty Assessment
 
@@ -88,12 +88,12 @@ Pragmatic recommendation for sloth now:
 
 ## 4) Protocol and Contracts
 
-Protocol:
+Protocol (near-term):
 
-- metadata API: REST JSON
-- artifact download: HTTPS URL
-- integrity: SHA256 checksum for each artifact
-- optional later: signed manifest (sigstore/cosign style)
+- artifact protocol: OCI distribution API (GHCR)
+- client library: ORAS Go SDK
+- integrity: OCI digest verification plus optional SHA256 metadata in artifact annotations
+- optional later: signature verification (cosign/sigstore)
 
 Core package manifest example:
 
@@ -114,30 +114,25 @@ Core package manifest example:
 }
 ```
 
-## 5) CLI Install Flow
+## 5) CLI Pull Flow
 
-Proposed flow for `sloth registry add`:
+Proposed user-facing flow keeps `contracts` abstraction and hides OCI internals:
 
-1. Resolve package metadata from registry API.
-2. Choose version by compatibility constraints.
-3. Download artifact from CDN.
-4. Verify SHA256 checksum.
-5. Extract into project folders:
-   - `components/ui`
-   - atomic component folders
-   - sloth config/template folders
-6. Write lock metadata for deterministic updates.
+1. `sloth contracts ls --version <x.y.z|latest>` resolves available contracts for a release.
+2. `sloth contracts pull --name <contract> --version <x.y.z>` pulls a single contract from OCI-backed release payload.
+3. CLI verifies compatibility constraints and writes local contract files.
+4. CLI writes lock metadata for deterministic updates.
 
-## 6) CLI Commands (Registry-Oriented)
+## 6) CLI Commands (Contract-Oriented)
 
 Suggested commands:
 
-- `sloth registry search <keyword>`
-- `sloth registry info <package>`
-- `sloth registry add <package>@<version>`
-- `sloth registry update <package>|--all`
-- `sloth registry remove <package>`
-- `sloth registry publish` (future)
+- `sloth contracts ls --version <x.y.z|latest>`
+- `sloth contracts pull --name <contract> --version <x.y.z|latest>`
+
+Optional future expansion:
+
+- `sloth contracts pull --all --version <x.y.z|latest>`
 
 Useful flags:
 
@@ -161,9 +156,9 @@ Before public launch, enforce:
 
 Phase 1: Free public registry MVP
 
-- component-hub sourced immutable artifacts hosted from docs static path
-- static index endpoints for namespace/components/themes/packs
-- checksum verification and richer metadata API can be added in next increment
+- component-hub sourced immutable artifacts published to GHCR as OCI artifacts
+- CLI ORAS-based list and pull behavior under `contracts` command group
+- integration testing against local Zot OCI registry in docker compose on-demand profile
 
 Phase 2: Private packages
 

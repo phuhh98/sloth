@@ -1,16 +1,19 @@
 ---
 purpose: "Execution board for migrating component-hub contracts from version-first source folders to component-first source with deterministic release generation."
-status: "active"
+status: "superseded"
 owner: "platform"
-last_updated: "2026-05-10T10:45:00Z"
+last_updated: "2026-05-10T11:10:00Z"
 related_docs:
   - "docs/COMPONENT-HUB-DOCS-INTEGRATION.md"
   - "docs/MILESTONES.md"
   - "docs/REGISTRY.md"
   - "docs/IDEAS.md"
+  - "docs/KANBAN-OCI-REGISTRY-PIVOT.md"
 ---
 
 # Milestone Kanban: Contract Release Model Migration
+
+Superseded: This board is abandoned in favor of OCI registry strategy tracked in `docs/KANBAN-OCI-REGISTRY-PIVOT.md`.
 
 Use this board to control migration from source layout `src/contracts/<version>/components/...` to `src/contracts/components/...` while preserving immutable versioned published artifacts.
 
@@ -19,7 +22,7 @@ Use this board to control migration from source layout `src/contracts/<version>/
 - Milestone: Contract Release Model Migration (post Milestone 3)
 - Goal: Use component-first source contracts and deterministic release snapshots for versioned artifacts.
 - Constraints: Keep published `registry/contracts/<version>/...` layout compatible in this migration; max 20 tasks.
-- milestone_updated_at: 2026-05-10T10:45:00Z
+- milestone_updated_at: 2026-05-10T11:10:00Z
 
 ## Task Decomposition Rules
 

@@ -83,8 +83,9 @@ Notes:
 - documented starter packs, runtime integration, and OpenAPI host contract in `apps/docs/docs/`
 - added CMS-agnostic OpenAPI spec and component-hub mock server with seeded fixtures
 - added CLI integration test flow against the OpenAPI mock server (`list/inspect/add/verify/push`)
-- started post-milestone migration to move contract source from version-first folders to component-first layout with deterministic release snapshot generation
-- migration execution is tracked in `docs/KANBAN-CONTRACT-RELEASE-MIGRATION.md`
+- abandoned release-ledger/manifest migration path in favor of OCI registry strategy
+- adopted GHCR OCI artifact distribution with ORAS-based CLI abstraction for `contracts ls` and `contracts pull`
+- OCI pivot execution is tracked in dedicated kanban planning
 
 ## Milestone 4
 
@@ -96,7 +97,7 @@ Status: Not Started
 Notes:
 
 - detailed architecture and rollout in docs/REGISTRY.md
-- near-term bootstrap path uses static docs hosting with component-hub generated artifacts before introducing full metadata API
+- near-term bootstrap path uses GHCR OCI artifacts and CLI ORAS integration before introducing full metadata API
 
 ## Milestone 5
 

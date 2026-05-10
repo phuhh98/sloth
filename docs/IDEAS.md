@@ -240,16 +240,18 @@ CLI scope is component contracts only. Page concrete content is not managed by C
 
 Suggested command shape:
 
-- `sloth contracts list --plugin-version <version> [--source npm|git]`
-  - show compatible contract catalog with plugin version header
+- `sloth contracts ls --version <version|latest>`
+  - show compatible contract catalog with release version header
 - `sloth contracts inspect --host <url>`
   - inspect host plugin status and current component inventory summary
-- `sloth contracts add component --name <name> --plugin-version <version> [--source npm|git]`
-- `sloth contracts add set --name <set-name> --plugin-version <version> [--source npm|git]`
-- `sloth contracts add --all --plugin-version <version> [--source npm|git]`
+- `sloth contracts pull --name <name> --version <version|latest>`
+  - pull an individual contract from registry for selected release
+- `sloth contracts add component --name <name> --plugin-version <version>`
+- `sloth contracts add set --name <set-name> --plugin-version <version>`
+- `sloth contracts add --all --plugin-version <version>`
 - `sloth contracts verify --file <contract.json> [--plugin-version <version>]`
   - validate schema compatibility and name-collision rules before push
-- `sloth contracts push --plugin-version <version> [--source npm|git]`
+- `sloth contracts push --plugin-version <version>`
   - verify -> inspect remote -> compare drift -> ingest to host
 
 Flags:
@@ -267,13 +269,11 @@ Additional recommended flags:
 - `--dry-run`: show what would change without applying
 - `--format json|table`: output mode for CI and humans
 
-Source-specific flags:
+Registry/source backend stays internal to CLI:
 
-- npm mode:
-  - `--npm-package <name>` optional override
-- git mode:
-  - `--git-url <raw-base-url>`
-  - `--git-ref <tag|branch|commit>`
+- contracts are published as OCI artifacts to GHCR
+- CLI uses ORAS Go SDK for list and pull operations
+- users do not need source flags for npm/git/raw registry URLs
 
 Detailed behavior and error contract are defined in docs/COMPONENT-CONTRACTS.md.
 
@@ -430,8 +430,8 @@ CLI flow:
 ### Sync with Strapi
 
 1. Run `sloth contracts inspect --host <url>`.
-2. Run `sloth contracts list --plugin-version <version>`.
-3. Run `sloth contracts add ...` for single/set/all.
+2. Run `sloth contracts ls --version <version|latest>`.
+3. Run `sloth contracts pull --name <contract> --version <version|latest>` (or `contracts add ...`).
 4. Run `sloth contracts verify --file <contract.json>` for custom contracts.
 5. Run `sloth contracts push --plugin-version <version>`.
 

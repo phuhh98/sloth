@@ -1,6 +1,6 @@
 ---
 purpose: "Define how component-hub becomes the source of truth for registry artifacts and React component implementations used by the docs site."
-status: "proposed"
+status: "superseded"
 owner: "platform"
 last_updated: "2026-05-10"
 related_docs:
@@ -12,7 +12,19 @@ related_docs:
 # Component Hub to Docs Registry Integration
 
 Date: 2026-05-10
-Status: Proposed
+Status: Superseded by OCI registry strategy
+
+## Superseded Notice
+
+This document described a GitHub Pages static-registry sync approach.
+
+Current direction has changed:
+
+- registry distribution uses GHCR OCI artifacts
+- CLI uses ORAS SDK internally and keeps `contracts` abstraction (`ls`, `pull`)
+- docs static registry is no longer the primary distribution channel for contract pulls
+
+Keep this file for historical context only. Active planning is tracked in registry and kanban documents for the OCI pivot.
 
 ## Goal
 

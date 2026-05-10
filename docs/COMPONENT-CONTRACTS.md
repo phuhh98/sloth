@@ -33,14 +33,15 @@ Boundary rule:
 
 ## 2) Contract Source Resolution
 
-For a requested plugin version, CLI resolves contract schemas from one of two sources:
+For a requested release version, CLI resolves contracts from OCI artifacts hosted in GHCR.
 
-- npm source:
-  - fetch schema bundle from published sloth Strapi plugin package at specified version
-- git source:
-  - fetch schema bundle from raw git-hosted files at a specific tag, branch, or commit
+Near-term distribution model:
 
-Source selection should be explicit via command flags.
+- contract releases are published as OCI artifacts by sloth maintainers
+- CLI uses ORAS-backed resolver internally
+- end users do not interact with ORAS/OCI commands directly
+
+Source selection is internal to CLI and remains abstracted behind `sloth contracts` commands.
 
 Clarification:
 
@@ -74,9 +75,13 @@ Non-breaking policy for general component schema:
 
 ### 5.1 List Contracts
 
-CLI can list latest available component contracts with plugin version header and component summary list.
+CLI lists available component contracts for a selected release version.
 
-CLI should also inspect host status before push planning.
+List behavior should support:
+
+- explicit version via `--version`
+- `latest` resolution
+- output of contract names and basic metadata
 
 Output should include:
 
@@ -91,13 +96,17 @@ Output should include:
 
 ### 5.2 Add Contracts
 
-CLI supports add modes:
+CLI should pull individual contracts by name and version.
 
-- add single component contract
-- add a named set of component contracts
-- add all available contracts
+Required behavior:
 
-All add modes must run compatibility validation before write.
+- pull one contract by `--name` and `--version`
+- write local contract file to workspace output path
+- run compatibility validation before write
+
+Optional extension:
+
+- pull all contracts for a release with `--all`
 
 ### 5.3 Verify Contracts
 
@@ -113,21 +122,15 @@ If any check fails, verification returns blocking errors and push/add operations
 
 ## 6) Proposed Command Shape
 
-- `sloth contracts list --plugin-version <version> [--source npm|git]`
-- `sloth contracts inspect --host <url>`
-- `sloth contracts add component --name <component> --plugin-version <version> [--source npm|git]`
-- `sloth contracts add set --name <set-name> --plugin-version <version> [--source npm|git]`
-- `sloth contracts add --all --plugin-version <version> [--source npm|git]`
+- `sloth contracts ls --version <version|latest>`
+- `sloth contracts pull --name <component> --version <version|latest> [--out <path>]`
 - `sloth contracts verify --file <contract.json> [--plugin-version <version>]`
-- `sloth contracts push --plugin-version <version> [--source npm|git]`
+- `sloth contracts push --plugin-version <version>`
 
-Push pipeline:
+Notes:
 
-1. verify local contracts
-2. inspect remote host state
-3. compare drift (missing/extra/update)
-4. push to host ingest endpoint
-5. host materializes component content-type records
+- `contracts push` remains host ingest workflow for Strapi API.
+- registry publish operations are internal release automation and not part of end-user command surface.
 
 Host APIs for CLI:
 
@@ -135,13 +138,7 @@ Host APIs for CLI:
 - `GET /sloth/inspection/contract-schema?schemaVersion=<version>&inline=<boolean>`
 - `POST /sloth/contracts/ingest`
 
-Source flags:
-
-- npm mode:
-  - `--npm-package <name>` optional override
-- git mode:
-  - `--git-url <raw-base-url>`
-  - `--git-ref <tag|branch|commit>`
+Registry/source flags for end users are intentionally omitted to preserve abstraction.
 
 Behavior flags:
 
