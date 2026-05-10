@@ -1,0 +1,29 @@
+{
+  "$schema": "https://phuhh98.github.io/sloth/schemas/component-contract/0.0.1/schema.json",
+  "name": "text-block",
+  "label": "Text Block",
+  "kind": "block",
+  "version": "0.0.1",
+  "schemaVersion": "0.0.1",
+  "dataset": [
+    {
+      "key": "content",
+      "label": "Content",
+      "type": "string",
+      "required": true
+    },
+    {
+      "key": "alignment",
+      "label": "Alignment",
+      "type": "option",
+      "options": [
+        { "label": "Left", "value": "left" },
+        { "label": "Center", "value": "center" },
+        { "label": "Right", "value": "right" }
+      ]
+    }
+  ],
+  "renderMeta": {
+    "rendererKey": "text-block"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "$schema": "https://phuhh98.github.io/sloth/schemas/component-contract/0.0.1/schema.json",
+  "name": "related-carousel",
+  "label": "Related Carousel",
+  "kind": "section",
+  "version": "0.0.1",
+  "schemaVersion": "0.0.1",
+  "dataset": [
+    {
+      "key": "heading",
+      "label": "Heading",
+      "type": "string",
+      "required": true
+    },
+    {
+      "key": "relatedContentType",
+      "label": "Related Content Type",
+      "type": "string",
+      "required": true
+    },
+    {
+      "key": "limit",
+      "label": "Item Limit",
+      "type": "number"
+    }
+  ],
+  "renderMeta": {
+    "rendererKey": "related-carousel"
+  }
+}

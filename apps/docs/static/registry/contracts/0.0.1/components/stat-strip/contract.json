@@ -1,0 +1,31 @@
+{
+  "$schema": "https://phuhh98.github.io/sloth/schemas/component-contract/0.0.1/schema.json",
+  "name": "stat-strip",
+  "label": "Stat Strip",
+  "kind": "block",
+  "version": "0.0.1",
+  "schemaVersion": "0.0.1",
+  "dataset": [
+    {
+      "key": "heading",
+      "label": "Heading",
+      "type": "string",
+      "required": true
+    },
+    {
+      "key": "statLabel",
+      "label": "Stat Label",
+      "type": "string",
+      "required": true
+    },
+    {
+      "key": "value",
+      "label": "Value",
+      "type": "string",
+      "required": true
+    }
+  ],
+  "renderMeta": {
+    "rendererKey": "stat-strip"
+  }
+}

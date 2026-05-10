@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "validate:contracts": "node ./scripts/validate-contract-versions.mjs",
+    "contracts:workflow": "node ./scripts/contract-release-workflow.mjs",
+    "mock:server": "node ./scripts/openapi-mock-server.mjs --port 4010",
     "test": "node --test ./scripts/*.test.mjs",
     "build:registry": "node ./scripts/build-registry.mjs",
     "build:react": "node ./scripts/build-react.mjs",

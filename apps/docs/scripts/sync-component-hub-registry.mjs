@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { cp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
+import { cp, mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -21,7 +21,10 @@ const sourceRoot = path.resolve(
   "registry",
 );
 const targetRoot = path.join(docsDir, "static", "registry");
-const stateFilePath = path.join(targetRoot, "state.json");
+
+function getStateFilePath(targetRootPath) {
+  return path.join(targetRootPath, "state.json");
+}
 
 async function collectFileEntries(rootDir, currentDir = rootDir) {
   const entries = await readdir(currentDir, { withFileTypes: true });
@@ -43,7 +46,7 @@ async function collectFileEntries(rootDir, currentDir = rootDir) {
     files.push(relativePath);
   }
 
-  return files.sort();
+  return files.sort((a, b) => a.localeCompare(b));
 }
 
 async function computeDirectoryHash(rootDir) {
@@ -62,51 +65,50 @@ async function computeDirectoryHash(rootDir) {
   return hash.digest("hex");
 }
 
-async function readPreviousState() {
+async function readPreviousStateAt(statePath) {
   try {
-    const currentState = await readFile(stateFilePath, "utf8");
+    const currentState = await readFile(statePath, "utf8");
     return JSON.parse(currentState);
-  } catch (error) {
+  } catch {
     return undefined;
   }
 }
 
-async function syncRegistry() {
-  const previousState = await readPreviousState();
+export async function syncRegistry({
+  sourceRootPath = sourceRoot,
+  targetRootPath = targetRoot,
+  now = new Date().toISOString(),
+} = {}) {
+  const stateFilePath = getStateFilePath(targetRootPath);
+  const previousState = await readPreviousStateAt(stateFilePath);
 
-  await rm(targetRoot, { recursive: true, force: true });
-  await mkdir(targetRoot, { recursive: true });
+  // Keep existing versioned artifacts; only merge new output and refresh mutable indexes/state.
+  await mkdir(targetRootPath, { recursive: true });
+  await mkdir(path.join(targetRootPath, "contracts"), { recursive: true });
 
   await cp(
-    path.join(sourceRoot, "contracts"),
-    path.join(targetRoot, "contracts"),
+    path.join(sourceRootPath, "contracts"),
+    path.join(targetRootPath, "contracts"),
     {
       recursive: true,
     },
   );
 
-  await mkdir(path.join(targetRoot, "themes"), { recursive: true });
-  await mkdir(path.join(targetRoot, "packs"), { recursive: true });
+  await mkdir(path.join(targetRootPath, "themes"), { recursive: true });
 
   await writeFile(
-    path.join(targetRoot, "themes", "index.json"),
-    `${JSON.stringify({ registryFormatVersion: REGISTRY_FORMAT_VERSION, items: [] }, null, 2)}\n`,
-    "utf8",
-  );
-  await writeFile(
-    path.join(targetRoot, "packs", "index.json"),
+    path.join(targetRootPath, "themes", "index.json"),
     `${JSON.stringify({ registryFormatVersion: REGISTRY_FORMAT_VERSION, items: [] }, null, 2)}\n`,
     "utf8",
   );
 
   await writeFile(
-    path.join(targetRoot, "index.json"),
+    path.join(targetRootPath, "index.json"),
     `${JSON.stringify(
       {
         registryFormatVersion: REGISTRY_FORMAT_VERSION,
         contractsIndex: "/sloth/registry/contracts/index.json",
         themesIndex: "/sloth/registry/themes/index.json",
-        packsIndex: "/sloth/registry/packs/index.json",
       },
       null,
       2,
@@ -114,21 +116,23 @@ async function syncRegistry() {
     "utf8",
   );
 
-  const nextHash = await computeDirectoryHash(targetRoot);
-  const nextState = computeNextRegistryState(
-    previousState,
-    nextHash,
-    new Date().toISOString(),
-  );
+  const nextHash = await computeDirectoryHash(targetRootPath);
+  const nextState = computeNextRegistryState(previousState, nextHash, now);
 
   await writeFile(
     stateFilePath,
     `${JSON.stringify(nextState, null, 2)}\n`,
     "utf8",
   );
+
+  return nextState;
 }
 
-syncRegistry().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+if (process.argv[1] && process.argv[1] === __filename) {
+  try {
+    await syncRegistry();
+  } catch (error) {
+    console.error(error);
+    process.exitCode = 1;
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "$schema": "https://phuhh98.github.io/sloth/schemas/component-contract/0.0.1/schema.json",
+  "name": "content-feed",
+  "label": "Content Feed",
+  "kind": "section",
+  "version": "0.0.1",
+  "schemaVersion": "0.0.1",
+  "dataset": [
+    {
+      "key": "heading",
+      "label": "Heading",
+      "type": "string",
+      "required": true
+    },
+    {
+      "key": "sourceContentType",
+      "label": "Source Content Type",
+      "type": "string",
+      "required": true
+    },
+    {
+      "key": "limit",
+      "label": "Item Limit",
+      "type": "number"
+    },
+    {
+      "key": "sortKey",
+      "label": "Sort Key",
+      "type": "string"
+    }
+  ],
+  "renderMeta": {
+    "rendererKey": "content-feed"
+  }
+}

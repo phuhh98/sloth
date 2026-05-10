@@ -1,0 +1,249 @@
+openapi: 3.1.0
+info:
+  title: sloth Host API
+  version: 0.1.0
+  description: CMS-agnostic API contract for sloth inspection, contract discovery, and ingest.
+servers:
+  - url: http://localhost:4010
+security:
+  - bearerAuth: []
+paths:
+  /healthz:
+    get:
+      summary: Health check
+      security: []
+      responses:
+        "200":
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [ok]
+                properties:
+                  ok:
+                    type: boolean
+  /sloth/inspection/plugin-status:
+    get:
+      summary: Return host and plugin compatibility details
+      responses:
+        "200":
+          description: Plugin status payload
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PluginStatus"
+  /sloth/inspection/contract-schema:
+    get:
+      summary: Return schema URL or inline schema for a contract schema version
+      parameters:
+        - in: query
+          name: schemaVersion
+          schema:
+            type: string
+        - in: query
+          name: inline
+          schema:
+            type: boolean
+            default: false
+      responses:
+        "200":
+          description: Contract schema payload
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractSchemaResponse"
+  /sloth/contracts:
+    get:
+      summary: List available contracts with pagination metadata
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        "200":
+          description: Paginated contract list
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items, pagination]
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ContractSummary"
+                  pagination:
+                    $ref: "#/components/schemas/Pagination"
+  /sloth/contracts/{name}:
+    get:
+      summary: Inspect a single contract by name
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Contract payload
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [contract]
+                properties:
+                  contract:
+                    type: object
+                    additionalProperties: true
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /sloth/contracts/ingest:
+    post:
+      summary: Ingest a verified set of contracts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [contracts]
+              properties:
+                contracts:
+                  type: array
+                  minItems: 1
+                  items:
+                    type: object
+                    additionalProperties: true
+      responses:
+        "200":
+          description: Ingest summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IngestResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    BadRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+  schemas:
+    PluginStatus:
+      type: object
+      required:
+        - pluginName
+        - pluginVersion
+        - compatibleSchemaVersions
+        - components
+        - totalComponents
+      properties:
+        pluginName:
+          type: string
+        pluginVersion:
+          type: string
+        compatibleSchemaVersions:
+          type: array
+          items:
+            type: string
+        components:
+          type: array
+          items:
+            $ref: "#/components/schemas/ContractSummary"
+        totalComponents:
+          type: integer
+          minimum: 0
+    ContractSchemaResponse:
+      type: object
+      required: [schemaVersion]
+      properties:
+        schemaVersion:
+          type: string
+        schemaUrl:
+          type: string
+        schema:
+          type: object
+          additionalProperties: true
+    ContractSummary:
+      type: object
+      required: [name, version, schemaVersion]
+      properties:
+        name:
+          type: string
+        version:
+          type: string
+        schemaVersion:
+          type: string
+    IngestResponse:
+      type: object
+      required: [created, updated, failed, totalReceived]
+      properties:
+        created:
+          type: array
+          items:
+            type: string
+        updated:
+          type: array
+          items:
+            type: string
+        failed:
+          type: array
+          items:
+            type: object
+            required: [name, reason]
+            properties:
+              name:
+                type: string
+              reason:
+                type: string
+        totalReceived:
+          type: integer
+          minimum: 0
+    Pagination:
+      type: object
+      required: [page, pageSize, totalItems, totalPages]
+      properties:
+        page:
+          type: integer
+        pageSize:
+          type: integer
+        totalItems:
+          type: integer
+        totalPages:
+          type: integer
+    ErrorResponse:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        details:
+          type: object
+          additionalProperties: true

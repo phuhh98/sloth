@@ -1,0 +1,28 @@
+{
+  "registryFormatVersion": "1",
+  "items": [
+    {
+      "version": "0.0.1",
+      "manifest": "/sloth/registry/contracts/0.0.1/manifest.json",
+      "components": [
+        "article-teaser",
+        "author-bio",
+        "breadcrumb-trail",
+        "card-grid",
+        "content-feed",
+        "cta-banner",
+        "faq-list",
+        "feature-grid",
+        "hero-banner",
+        "layout-shell",
+        "pricing-table",
+        "related-carousel",
+        "seo-head",
+        "stat-strip",
+        "testimonials",
+        "text-block"
+      ],
+      "deprecatedAt": null
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://phuhh98.github.io/sloth/schemas/component-contract/0.0.1/schema.json",
+  "name": "pricing-table",
+  "label": "Pricing Table",
+  "kind": "section",
+  "version": "0.0.1",
+  "schemaVersion": "0.0.1",
+  "dataset": [
+    {
+      "key": "heading",
+      "label": "Heading",
+      "type": "string",
+      "required": true
+    },
+    {
+      "key": "defaultPlan",
+      "label": "Default Plan",
+      "type": "string",
+      "required": true
+    },
+    {
+      "key": "currency",
+      "label": "Currency",
+      "type": "string",
+      "required": true
+    }
+  ],
+  "renderMeta": {
+    "rendererKey": "pricing-table"
+  }
+}

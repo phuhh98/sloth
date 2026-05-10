@@ -1,0 +1,28 @@
+{
+  "$schema": "https://phuhh98.github.io/sloth/schemas/component-contract/0.0.1/schema.json",
+  "name": "article-teaser",
+  "label": "Article Teaser",
+  "kind": "block",
+  "version": "0.0.1",
+  "schemaVersion": "0.0.1",
+  "dataset": [
+    {
+      "key": "entryId",
+      "label": "Linked Article",
+      "type": "dynamic",
+      "required": true,
+      "valueDropdown": {
+        "contentType": "api::article.article",
+        "path": "id"
+      }
+    },
+    {
+      "key": "fallbackLabel",
+      "label": "Fallback Label",
+      "type": "string"
+    }
+  ],
+  "renderMeta": {
+    "rendererKey": "article-teaser"
+  }
+}

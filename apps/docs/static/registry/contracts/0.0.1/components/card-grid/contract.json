@@ -1,0 +1,33 @@
+{
+  "$schema": "https://phuhh98.github.io/sloth/schemas/component-contract/0.0.1/schema.json",
+  "name": "card-grid",
+  "label": "Card Grid",
+  "kind": "section",
+  "version": "0.0.1",
+  "schemaVersion": "0.0.1",
+  "dataset": [
+    {
+      "key": "heading",
+      "label": "Heading",
+      "type": "string",
+      "required": true
+    },
+    {
+      "key": "cardCount",
+      "label": "Card Count",
+      "type": "number"
+    },
+    {
+      "key": "layout",
+      "label": "Layout",
+      "type": "option",
+      "options": [
+        { "label": "Compact", "value": "compact" },
+        { "label": "Spacious", "value": "spacious" }
+      ]
+    }
+  ],
+  "renderMeta": {
+    "rendererKey": "card-grid"
+  }
+}

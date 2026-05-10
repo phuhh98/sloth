@@ -16,7 +16,6 @@ This page lists stable, versioned artifact URLs served by the sloth docs site.
 - Registry index: [https://phuhh98.github.io/sloth/registry/index.json](https://phuhh98.github.io/sloth/registry/index.json)
 - Contract releases index: [https://phuhh98.github.io/sloth/registry/contracts/index.json](https://phuhh98.github.io/sloth/registry/contracts/index.json)
 - Themes index: [https://phuhh98.github.io/sloth/registry/themes/index.json](https://phuhh98.github.io/sloth/registry/themes/index.json)
-- Packs index: [https://phuhh98.github.io/sloth/registry/packs/index.json](https://phuhh98.github.io/sloth/registry/packs/index.json)
 
 ### Versioned Folder Convention
 
@@ -34,14 +33,13 @@ apps/docs/static/registry/
 					contract.json
 	themes/
 		index.json
-	packs/
-		index.json
 ```
 
 Example versioned contract release artifacts:
 
 - [https://phuhh98.github.io/sloth/registry/contracts/0.0.1/manifest.json](https://phuhh98.github.io/sloth/registry/contracts/0.0.1/manifest.json)
 - [https://phuhh98.github.io/sloth/registry/contracts/0.0.1/components/hero-banner/contract.json](https://phuhh98.github.io/sloth/registry/contracts/0.0.1/components/hero-banner/contract.json)
+- [https://phuhh98.github.io/sloth/registry/contracts/0.0.1/components/article-teaser/contract.json](https://phuhh98.github.io/sloth/registry/contracts/0.0.1/components/article-teaser/contract.json)
 
 ## Notes
 

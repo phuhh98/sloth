@@ -69,6 +69,7 @@ packages/component-hub/
 
 - copy from `packages/component-hub/dist/registry/contracts/**`
 - to `apps/docs/static/registry/contracts/**`
+- keep generated `apps/docs/static/registry/**` artifacts committed in git (versioned folders, indexes, and state)
 
 4. Regenerate index files:
 
@@ -84,6 +85,9 @@ At package level (`packages/component-hub/package.json`):
 
 - `build:registry` — validates contracts and emits immutable artifacts under `dist/registry`
 - `build:react` — compiles basic React implementations under `dist/react`
+- `contracts:workflow` — release helper for contract version management:
+  - `pnpm --filter @sloth/component-hub run contracts:workflow sync --release <version>` refreshes manifest component hashes from current contract files
+  - `pnpm --filter @sloth/component-hub run contracts:workflow create --from <old> --to <new>` clones a release folder, bumps contract `version` fields, and syncs the new manifest
 - `build` — runs both targets
 
 At docs level (`apps/docs/package.json`):

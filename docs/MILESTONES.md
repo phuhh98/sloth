@@ -73,13 +73,18 @@ Goal:
 - component hub starter packs
 - runtime renderer integration examples
 
-Status: Not Started
+Status: In Progress
 Notes:
 
-- depends on stable plugin and CLI contract
-- include rendering strategy decision: sample frontend-only or extracted SDK
-- component-hub should own contract + basic React implementation sources
-- docs build should sync generated release-versioned contract sets into `apps/docs/static/registry/contracts/`
+- finalized dynamic/static shortlist and shared base contract + SEO slot model in `docs/COMPONENT-HUB-BASE-CONTRACT-AND-SHORTLIST.md`
+- implemented starter pack schema/types, validator/builder scripts, and first artifact `marketing-core@0.0.1`
+- added runtime renderer mapping utility and frontend first-level payload example at `apps/frontend/runtime-example.mjs`
+- extended docs sync to publish pack artifacts under `apps/docs/static/registry/packs/`
+- documented starter packs, runtime integration, and OpenAPI host contract in `apps/docs/docs/`
+- added CMS-agnostic OpenAPI spec and component-hub mock server with seeded fixtures
+- added CLI integration test flow against the OpenAPI mock server (`list/inspect/add/verify/push`)
+- started post-milestone migration to move contract source from version-first folders to component-first layout with deterministic release snapshot generation
+- migration execution is tracked in `docs/KANBAN-CONTRACT-RELEASE-MIGRATION.md`
 
 ## Milestone 4
 

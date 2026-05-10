@@ -1,0 +1,38 @@
+{
+  "$schema": "https://phuhh98.github.io/sloth/schemas/component-contract/0.0.1/schema.json",
+  "name": "seo-head",
+  "label": "SEO Head",
+  "kind": "block",
+  "version": "0.0.1",
+  "schemaVersion": "0.0.1",
+  "dataset": [
+    {
+      "key": "title",
+      "label": "Title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "key": "description",
+      "label": "Description",
+      "type": "string"
+    },
+    {
+      "key": "canonicalUrl",
+      "label": "Canonical URL",
+      "type": "string"
+    },
+    {
+      "key": "noIndex",
+      "label": "No Index",
+      "type": "option",
+      "options": [
+        { "label": "No", "value": false },
+        { "label": "Yes", "value": true }
+      ]
+    }
+  ],
+  "renderMeta": {
+    "rendererKey": "seo-head"
+  }
+}

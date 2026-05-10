@@ -4,11 +4,21 @@ import path from "node:path";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 
+import {
+  readReleaseLedger,
+  validateReleaseLedger,
+} from "./contract-release-ledger.mjs";
+
 const execFileAsync = promisify(execFile);
 
 export const MIN_DEPRECATION_MONTHS = 6;
 const RELEASE_VERSION_PATTERN =
   /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/;
+const RESERVED_SOURCE_DIRS = new Set(["components", "releases"]);
+
+export function isReleaseVersion(value) {
+  return RELEASE_VERSION_PATTERN.test(value);
+}
 
 export function semverCompareDescending(a, b) {
   const pa = a.split(".").map((part) => Number.parseInt(part, 10));
@@ -102,6 +112,116 @@ async function gitShow(rootDir, ref, relativePath) {
   }
 }
 
+export async function validateLedgerRelease({
+  rootDir,
+  release,
+  referenceDate = new Date(),
+}) {
+  const errors = [];
+
+  if (!release || typeof release !== "object") {
+    return ["Release entry must be an object."];
+  }
+
+  const { version, schemaVersion, components = {} } = release;
+
+  if (!isReleaseVersion(version)) {
+    errors.push(`Invalid release version in ledger: ${version}.`);
+    return errors;
+  }
+
+  const sourceDir = path.join(rootDir, "src", "contracts");
+
+  for (const [componentName, componentInfo] of Object.entries(components)) {
+    if (!componentInfo || typeof componentInfo !== "object") {
+      errors.push(
+        `Release ${version} component ${componentName} entry must be an object.`,
+      );
+      continue;
+    }
+
+    const { contractPath: relativeContractPath, contentHash } = componentInfo;
+
+    if (typeof relativeContractPath !== "string") {
+      errors.push(
+        `Release ${version} component ${componentName} is missing contractPath.`,
+      );
+      continue;
+    }
+
+    if (typeof contentHash !== "string") {
+      errors.push(
+        `Release ${version} component ${componentName} is missing contentHash.`,
+      );
+      continue;
+    }
+
+    const actualContractPath = path.join(
+      sourceDir,
+      "components",
+      componentName,
+      "contract.json",
+    );
+    const versionSpecificContractPath = path.join(
+      sourceDir,
+      version,
+      "components",
+      componentName,
+      "contract.json",
+    );
+
+    let contractRaw;
+    try {
+      try {
+        contractRaw = await readFile(actualContractPath, "utf8");
+      } catch {
+        // Fall back to version-specific path during migration
+        contractRaw = await readFile(versionSpecificContractPath, "utf8");
+      }
+    } catch (error) {
+      errors.push(
+        `Could not read contract for ${componentName} in release ${version}: ${error.message}.`,
+      );
+      continue;
+    }
+
+    try {
+      const contract = JSON.parse(contractRaw);
+      const actualHash = computeContentHash(contractRaw);
+
+      if (contract.name !== componentName) {
+        errors.push(
+          `Contract name mismatch for ${componentName}: contract.name is ${contract.name} but ledger references ${componentName}.`,
+        );
+      }
+
+      if (contract.version !== version) {
+        errors.push(
+          `Contract version mismatch for ${componentName}: contract.version is ${contract.version} but ledger release is ${version}.`,
+        );
+      }
+
+      if (schemaVersion && contract.schemaVersion !== schemaVersion) {
+        errors.push(
+          `Contract schemaVersion mismatch for ${componentName}: contract.schemaVersion is ${contract.schemaVersion} but ledger release is ${schemaVersion}.`,
+        );
+      }
+
+      if (actualHash !== contentHash) {
+        errors.push(
+          `Contract contentHash mismatch for ${componentName}: actual is ${actualHash} but ledger records ${contentHash}.`,
+        );
+      }
+    } catch (error) {
+      errors.push(
+        `Could not parse or validate contract for ${componentName}: ${error.message}.`,
+      );
+    }
+  }
+
+  return errors;
+}
+
 export async function validateContracts({
   rootDir,
   compareRef,
@@ -114,13 +234,35 @@ export async function validateContracts({
     .map((entry) => entry.name);
   const errors = [];
   const releaseEntries = [];
+
+  // Read and validate release ledger if present
+  const ledger = await readReleaseLedger({ rootDir });
+  const ledgerErrors = validateReleaseLedger(ledger);
+  if (ledgerErrors.length > 0) {
+    errors.push("Release ledger validation failed:", ...ledgerErrors);
+  }
+
+  // Validate each ledger release against source contracts
+  for (const release of ledger.releases) {
+    const ledgerReleaseErrors = await validateLedgerRelease({
+      rootDir,
+      release,
+      referenceDate,
+    });
+    if (ledgerReleaseErrors.length > 0) {
+      errors.push(
+        `Release ${release.version} ledger entry failed validation:`,
+        ...ledgerReleaseErrors,
+      );
+    }
+  }
   const validReleaseExample =
     [...releaseDirs]
-      .filter((name) => RELEASE_VERSION_PATTERN.test(name))
+      .filter((name) => isReleaseVersion(name))
       .sort(semverCompareDescending)[0] ?? "0.0.1";
 
   const invalidReleaseDirs = releaseDirs.filter(
-    (name) => !RELEASE_VERSION_PATTERN.test(name),
+    (name) => !isReleaseVersion(name) && !RESERVED_SOURCE_DIRS.has(name),
   );
   for (const folderName of invalidReleaseDirs) {
     errors.push(
@@ -129,7 +271,7 @@ export async function validateContracts({
   }
 
   for (const releaseVersion of releaseDirs.filter((name) =>
-    RELEASE_VERSION_PATTERN.test(name),
+    isReleaseVersion(name),
   )) {
     const releaseDir = path.join(sourceDir, releaseVersion);
     const manifestPath = path.join(releaseDir, "manifest.json");

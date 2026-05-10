@@ -19,7 +19,7 @@ Use this board for detailed execution tracking of one milestone.
 - Milestone: Milestone 3 - Component Hub Starter + Renderer Examples
 - Goal: Publish starter packs and runtime integration examples for rendering page payloads with component mappings
 - Constraints: Keep core milestone under 20 tasks; HUB-000..HUB-012 (13 tasks) plus PUB-001..PUB-004 (4 tasks, Milestone 2 follow-up)
-- milestone_updated_at: 2026-05-11T00:05:00Z
+- milestone_updated_at: 2026-05-10T00:40:00Z
 
 ### Task Decomposition Rules
 
@@ -46,109 +46,109 @@ Task card format (keep concise):
 
 ## To Do
 
-- [ ] HUB-000: Finalize dynamic content component shortlist and SEO mapping
+- [x] HUB-000: Finalize dynamic content component shortlist and SEO mapping
   - what: Lock first-class dynamic content contracts for article/post ecosystems before schema implementation.
   - do: Validate starter set for feed, related carousel, article teaser, author, breadcrumb, and seo-head components.
   - next: Feed approved list into static/dynamic block planning tasks.
   - deps: none
   - requires-confirmation: true
-  - status: todo
+  - status: done
 
-- [ ] HUB-008: Finalize static block shortlist and priorities
+- [x] HUB-008: Finalize static block shortlist and priorities
   - what: Lock static/reusable blocks and sections used across non-dynamic pages.
   - do: Validate Text, Card, Stat, CTA, Features, Testimonials, FAQ, Pricing, and base layout wrappers.
   - next: Feed approved static set into shared block contract draft.
   - deps: none
   - requires-confirmation: true
-  - status: todo
+  - status: done
 
-- [ ] HUB-009: Define shared layout/section/block base contract and SEO slots
+- [x] HUB-009: Define shared layout/section/block base contract and SEO slots
   - what: Establish common attributes for all component contracts plus SEO behavior boundaries.
   - do: Specify base fields (id, rendererKey, visibility, style tokens, dataSource), section metadata, and block-level SEO contribution model.
   - next: Use shared base contract in HUB-001 starter pack manifest and per-component schemas.
   - deps: HUB-000, HUB-008
   - requires-confirmation: false
-  - status: todo
+  - status: done
 
-- [ ] HUB-001: Define starter pack manifest schema
+- [x] HUB-001: Define starter pack manifest schema
   - what: Create starter pack manifest contract for component hub artifacts.
   - do: Add JSON schema and TS types for pack metadata and component references.
   - next: Implement validator and build script.
   - deps: HUB-009
   - requires-confirmation: false
-  - status: todo
+  - status: done
 
-- [ ] HUB-002: Implement starter pack validator and builder
+- [x] HUB-002: Implement starter pack validator and builder
   - what: Build and validate starter pack artifacts from source descriptors.
   - do: Add scripts and tests in packages/component-hub.
   - next: Generate first pack artifact.
   - deps: HUB-001
   - requires-confirmation: false
-  - status: todo
+  - status: done
 
-- [ ] HUB-003: Publish first starter pack artifact
+- [x] HUB-003: Publish first starter pack artifact
   - what: Create one high-quality starter pack with docs metadata.
   - do: Add pack descriptor and generated artifact under docs static registry path.
   - next: Add renderer mapping example.
   - deps: HUB-002
   - requires-confirmation: false
-  - status: todo
+  - status: done
 
-- [ ] HUB-004: Add runtime renderer mapping utility
+- [x] HUB-004: Add runtime renderer mapping utility
   - what: Implement utility that maps component contract rendererKey to React implementation.
   - do: Add package-level API and tests for mapping behavior.
   - next: Integrate with sample app page payload.
   - deps: HUB-003
   - requires-confirmation: false
-  - status: todo
+  - status: done
 
-- [ ] HUB-005: Build frontend runtime example page
+- [x] HUB-005: Build frontend runtime example page
   - what: Demonstrate rendering a page payload using starter pack component mappings.
   - do: Add example in apps/frontend with first-level payload handling.
   - next: Document usage in public docs.
   - deps: HUB-004
   - requires-confirmation: true
-  - status: todo
+  - status: done
 
-- [ ] HUB-006: Add docs sync workflow for contracts and packs
+- [x] HUB-006: Add docs sync workflow for contracts and packs
   - what: Ensure docs static registry receives generated contract/pack artifacts per release.
   - do: Add script and tests for sync behavior.
   - next: Wire task commands and CI hooks.
   - deps: HUB-003
   - requires-confirmation: false
-  - status: todo
+  - status: done
 
-- [ ] HUB-007: Document component hub and renderer integration
+- [x] HUB-007: Document component hub and renderer integration
   - what: Publish public docs for starter packs and renderer integration patterns.
   - do: Add docs pages in apps/docs/docs with examples and versioning guidance.
   - next: Mark milestone complete after validation.
   - deps: HUB-005, HUB-006
   - requires-confirmation: false
-  - status: todo
+  - status: done
 
-- [ ] HUB-010: Define OpenAPI contract for sloth CMS-agnostic API surface
+- [x] HUB-010: Define OpenAPI contract for sloth CMS-agnostic API surface
   - what: Define `openapi.yaml` for inspection, contract discovery, and ingest APIs using a general CMS integration model (not Strapi-specific).
   - do: Draft OpenAPI paths/schemas based on docs/IDEAS.md intent, including auth, errors, pagination, and versioning policy.
   - next: Use OpenAPI as source for mock-server behavior and integration contract tests.
   - deps: HUB-009
   - requires-confirmation: true
-  - status: todo
+  - status: done
 
-- [ ] HUB-011: Build component-hub mock server with seeded contract set
+- [x] HUB-011: Build component-hub mock server with seeded contract set
   - what: Provide a deterministic mock server inside component-hub that serves a defined starter contract dataset via the OpenAPI spec.
   - do: Implement mock endpoints, seed fixtures (static + dynamic contracts), and runner scripts for local/CI execution.
   - next: Run CLI integration tests against mock server.
   - deps: HUB-003, HUB-010
   - requires-confirmation: false
-  - status: todo
+  - status: done
 
-- [ ] HUB-012: Add CLI integration tests against OpenAPI mock server and track gaps
+- [x] HUB-012: Add CLI integration tests against OpenAPI mock server and track gaps
   - what: Validate `sloth` CLI behavior end-to-end using OpenAPI-defined mock server + seeded contracts.
   - do: Add integration test suite for list/inspect/add/verify/push flows, assert outputs/errors, and record known flaws with improvement notes.
   - next: Prioritize fixes and feed defects into next milestone backlog.
   - deps: HUB-011
   - requires-confirmation: false
-  - status: todo
+  - status: done
 
 **Post-Milestone-2 Follow-up: CLI Publishing Automation (requires user intervention)**
 
@@ -188,9 +188,9 @@ Task card format (keep concise):
 
 - [ ] None
   - what: no active task
-  - do: start HUB-000 and HUB-008 when milestone 3 execution begins
-  - next: scaffold schema and type definitions
-  - deps: none
+  - do: keep PUB tasks pending until user-driven credential/release-policy confirmation
+  - next: run first CLI publish dry-run once secrets and tags are configured
+  - deps: PUB-001, PUB-002, PUB-003
   - status: in-progress
 
 ## Blocked
@@ -204,10 +204,10 @@ Task card format (keep concise):
 
 ## Done
 
-- [x] None
-  - what: no completed task yet
-  - do: none
-  - next: none
+- [x] HUB-000..HUB-012
+  - what: Milestone 3 core scope implemented (shortlist/base contract decisions, starter packs, runtime mapping example, docs sync, OpenAPI mock server, CLI integration tests)
+  - do: validated with component-hub tests, docs registry tests, and CLI Go tests
+  - next: close milestone after optional visual review of frontend example and docs site render
   - deps: none
   - status: done
 
@@ -242,10 +242,10 @@ Task card format (keep concise):
   - Add HUB-011/HUB-012 to validate CLI against deterministic API behavior and capture quality gaps.
   - HUB-001..HUB-007 are Milestone 3 core scope; PUB-001..PUB-004 are Milestone 2 follow-up (CLI publishing automation).
   - User confirmation required for all PUB-\* tasks (credential setup, release policy, runbook validation).
+  - HUB-000 and HUB-008 were completed via documented shortlist decisions in `docs/COMPONENT-HUB-BASE-CONTRACT-AND-SHORTLIST.md`.
+  - HUB-005 is implemented as a runtime script example and still benefits from optional UI/UX review if promoted to a production frontend route.
 - Next:
-  - Start HUB-000 and HUB-008.
-  - Schedule HUB-010 after HUB-009 approval, then execute HUB-011 and HUB-012 in sequence.
-  - PUB tasks can run in parallel with HUB tasks or scheduled after Milestone 3 completion based on priority.
+  - Execute PUB-001..PUB-004 when release credentials and maintainers are available for confirmation.
 
 ### Archival
 

@@ -1,0 +1,30 @@
+{
+  "$schema": "https://phuhh98.github.io/sloth/schemas/component-contract/0.0.1/schema.json",
+  "name": "testimonials",
+  "label": "Testimonials",
+  "kind": "section",
+  "version": "0.0.1",
+  "schemaVersion": "0.0.1",
+  "dataset": [
+    {
+      "key": "heading",
+      "label": "Heading",
+      "type": "string",
+      "required": true
+    },
+    {
+      "key": "sourceLabel",
+      "label": "Source Label",
+      "type": "string",
+      "required": true
+    },
+    {
+      "key": "limit",
+      "label": "Testimonial Limit",
+      "type": "number"
+    }
+  ],
+  "renderMeta": {
+    "rendererKey": "testimonials"
+  }
+}

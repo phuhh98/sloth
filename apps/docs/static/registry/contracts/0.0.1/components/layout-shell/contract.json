@@ -1,0 +1,29 @@
+{
+  "$schema": "https://phuhh98.github.io/sloth/schemas/component-contract/0.0.1/schema.json",
+  "name": "layout-shell",
+  "label": "Layout Shell",
+  "kind": "layout",
+  "version": "0.0.1",
+  "schemaVersion": "0.0.1",
+  "dataset": [
+    {
+      "key": "shellName",
+      "label": "Shell Name",
+      "type": "string",
+      "required": true
+    },
+    {
+      "key": "containerWidth",
+      "label": "Container Width",
+      "type": "option",
+      "options": [
+        { "label": "Narrow", "value": "narrow" },
+        { "label": "Standard", "value": "standard" },
+        { "label": "Wide", "value": "wide" }
+      ]
+    }
+  ],
+  "renderMeta": {
+    "rendererKey": "layout-shell"
+  }
+}

@@ -1,0 +1,22 @@
+[
+  {
+    "name": "hero-banner",
+    "label": "Hero Banner",
+    "version": "0.0.1",
+    "schemaVersion": "0.0.1",
+    "kind": "section",
+    "renderMeta": {
+      "rendererKey": "hero-banner"
+    }
+  },
+  {
+    "name": "article-teaser",
+    "label": "Article Teaser",
+    "version": "0.0.1",
+    "schemaVersion": "0.0.1",
+    "kind": "block",
+    "renderMeta": {
+      "rendererKey": "article-teaser"
+    }
+  }
+]

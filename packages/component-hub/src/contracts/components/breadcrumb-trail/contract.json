@@ -1,0 +1,30 @@
+{
+  "$schema": "https://phuhh98.github.io/sloth/schemas/component-contract/0.0.1/schema.json",
+  "name": "breadcrumb-trail",
+  "label": "Breadcrumb Trail",
+  "kind": "layout",
+  "version": "0.0.1",
+  "schemaVersion": "0.0.1",
+  "dataset": [
+    {
+      "key": "currentLabel",
+      "label": "Current Label",
+      "type": "string",
+      "required": true
+    },
+    {
+      "key": "currentPath",
+      "label": "Current Path",
+      "type": "string",
+      "required": true
+    },
+    {
+      "key": "homeLabel",
+      "label": "Home Label",
+      "type": "string"
+    }
+  ],
+  "renderMeta": {
+    "rendererKey": "breadcrumb-trail"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "$schema": "https://phuhh98.github.io/sloth/schemas/component-contract/0.0.1/schema.json",
+  "name": "author-bio",
+  "label": "Author Bio",
+  "kind": "block",
+  "version": "0.0.1",
+  "schemaVersion": "0.0.1",
+  "dataset": [
+    {
+      "key": "authorRef",
+      "label": "Author",
+      "type": "dynamic",
+      "required": true,
+      "valueDropdown": {
+        "contentType": "api::author.author",
+        "path": "id"
+      }
+    },
+    {
+      "key": "bioStyle",
+      "label": "Bio Style",
+      "type": "string"
+    }
+  ],
+  "renderMeta": {
+    "rendererKey": "author-bio"
+  }
+}
