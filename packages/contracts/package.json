@@ -1,0 +1,13 @@
+{
+  "name": "@sloth/contracts",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test ./scripts/*.test.mjs",
+    "build:registry": "node ./scripts/build-registry.mjs",
+    "sync:schemas:docs": "node ./scripts/sync-schemas-to-docs.mjs",
+    "check:schemas:docs": "node ./scripts/sync-schemas-to-docs.mjs --check",
+    "build": "pnpm run build:registry"
+  }
+}
