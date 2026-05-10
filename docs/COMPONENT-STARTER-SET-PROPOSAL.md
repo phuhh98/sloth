@@ -4,7 +4,7 @@ created_date: "2026-05-10"
 owner: "platform"
 status: "proposal"
 related_docs:
-  - "docs/KANBAN-MILESTONE-3.md"
+  - "docs/archive/KANBAN-MILESTONE-3.md"
   - "docs/COMPONENT-CONTRACTS.md"
 ---
 

@@ -2,13 +2,13 @@
 purpose: "Execution board for pivoting contract distribution from release-manifest migration to OCI artifacts in GHCR with CLI abstraction."
 status: "active"
 owner: "platform"
-last_updated: "2026-05-10T11:10:00Z"
+last_updated: "2026-05-10T11:35:00Z"
 related_docs:
   - "docs/REGISTRY.md"
   - "docs/IDEAS.md"
   - "docs/COMPONENT-CONTRACTS.md"
   - "docs/MILESTONES.md"
-  - "docs/KANBAN-CONTRACT-RELEASE-MIGRATION.md"
+  - "docs/archive/KANBAN-CONTRACT-RELEASE-MIGRATION.md"
 ---
 
 # Milestone Kanban: OCI Registry Pivot
@@ -20,7 +20,15 @@ Use this board to execute the registry strategy pivot to GHCR OCI artifacts with
 - Milestone: OCI Registry Pivot (post Milestone 3 adjustment)
 - Goal: Replace manifest-ledger-based distribution assumptions with OCI-based contract distribution in GHCR.
 - Constraints: Keep user command surface contract-oriented; avoid requiring users to invoke raw registry commands.
-- milestone_updated_at: 2026-05-10T11:10:00Z
+- milestone_updated_at: 2026-05-10T11:35:00Z
+
+## Carryover Mapping (From Superseded Milestone 3 Work)
+
+- REL-009 (release workflow tests): kept as OCI-007 and OCI-011 with OCI-focused integration and validation coverage.
+- REL-010 (contract policy tests): kept as OCI-011 by re-baselining test/policy expectations around OCI resolver behavior.
+- REL-011 (docs/instructions updates): kept as OCI-012 for final user-facing and instruction alignment.
+- REL-012 (full verification gate): kept as OCI-010.
+- Release-ledger-specific migration assertions: dropped as no longer applicable to OCI strategy.
 
 ## Task Decomposition Rules
 
@@ -96,16 +104,30 @@ Task card format (keep concise):
 
 - [ ] OCI-009: Deprecate obsolete manifest-ledger migration checks
   - what: Remove or downgrade checks that assume release-manifest migration is active.
-  - do: Update lint-staged/hooks/CI steps and docs references.
-  - next: Run full verification gate.
+  - do: Update lint-staged/hooks/CI steps and docs references; archive or remove obsolete migration scripts/tests that are no longer part of release criteria.
+  - next: Re-baseline tests and validation to OCI path.
   - deps: OCI-003, OCI-008
+  - status: todo
+
+- [ ] OCI-011: Re-baseline contract validation and test suites for OCI path
+  - what: Convert remaining migration-era test expectations into OCI-era behavior checks.
+  - do: Update component-hub and CLI tests to remove release-ledger coupling where obsolete; add coverage for version selection, missing contract handling, and resolver fallback behavior.
+  - next: Ensure pre-commit and CI checks align with updated test contracts.
+  - deps: OCI-004, OCI-005, OCI-009
+  - status: todo
+
+- [ ] OCI-012: Finalize docs and repo instructions for OCI contract flow
+  - what: Align user docs and repository instructions with `contracts ls/pull` + OCI backend model.
+  - do: Update CLI docs pages, docs README references, and instruction files that still describe manifest-ledger migration behavior.
+  - next: Include in final verification gate and release notes.
+  - deps: OCI-004, OCI-005
   - status: todo
 
 - [ ] OCI-010: Run full verification gate for pivot
   - what: Validate pivot end-to-end across CLI tests, docs build, and workflow checks.
   - do: Execute test matrix and summarize rollout constraints.
   - next: Prepare merge summary.
-  - deps: OCI-004, OCI-005, OCI-007, OCI-009
+  - deps: OCI-007, OCI-008, OCI-009, OCI-011, OCI-012
   - status: todo
 
 ## In Progress

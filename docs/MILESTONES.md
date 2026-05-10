@@ -73,7 +73,7 @@ Goal:
 - component hub starter packs
 - runtime renderer integration examples
 
-Status: In Progress
+Status: Completed
 Notes:
 
 - finalized dynamic/static shortlist and shared base contract + SEO slot model in `docs/COMPONENT-HUB-BASE-CONTRACT-AND-SHORTLIST.md`
@@ -85,7 +85,9 @@ Notes:
 - added CLI integration test flow against the OpenAPI mock server (`list/inspect/add/verify/push`)
 - abandoned release-ledger/manifest migration path in favor of OCI registry strategy
 - adopted GHCR OCI artifact distribution with ORAS-based CLI abstraction for `contracts ls` and `contracts pull`
-- OCI pivot execution is tracked in dedicated kanban planning
+- milestone execution board archived at `docs/archive/KANBAN-MILESTONE-3.md`
+- OCI pivot execution is tracked in `docs/KANBAN-OCI-REGISTRY-PIVOT.md`
+- unfinished migration-era tasks (test re-baseline, docs alignment, verification gate) were carried over and refined in `docs/KANBAN-OCI-REGISTRY-PIVOT.md`
 
 ## Milestone 4
 

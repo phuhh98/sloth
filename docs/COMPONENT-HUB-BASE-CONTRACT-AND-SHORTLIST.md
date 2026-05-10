@@ -4,7 +4,7 @@ status: "active"
 owner: "platform"
 last_updated: "2026-05-10"
 related_docs:
-  - "docs/KANBAN-MILESTONE-3.md"
+  - "docs/archive/KANBAN-MILESTONE-3.md"
   - "docs/IDEAS.md"
   - "docs/COMPONENT-CONTRACTS.md"
 ---
