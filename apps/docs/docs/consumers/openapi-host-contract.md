@@ -8,7 +8,7 @@ Milestone 3 adds a CMS-agnostic OpenAPI contract for the host inspection and ing
 
 ## Spec Location
 
-- Source file: `packages/component-hub/openapi/sloth-api.openapi.yaml`
+- Source file: `packages/contracts/openapi/sloth-api.openapi.yaml`
 
 ## Covered Endpoints
 
@@ -23,12 +23,12 @@ Milestone 3 adds a CMS-agnostic OpenAPI contract for the host inspection and ing
 
 A deterministic mock server implementation is available at:
 
-- `packages/component-hub/scripts/openapi-mock-server.mjs`
+- `packages/contracts/scripts/openapi-mock-server.mjs`
 
 Run it:
 
 ```bash
-node packages/component-hub/scripts/openapi-mock-server.mjs --port 4010
+node packages/contracts/scripts/openapi-mock-server.mjs --port 4010
 ```
 
-The server prints a ready marker with the bound port and serves seeded contracts from `packages/component-hub/src/mock/seed-contracts.json`.
+The server prints a ready marker with the bound port and serves seeded contracts from `packages/contracts/src/mock/seed-contracts.json`.

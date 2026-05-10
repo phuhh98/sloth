@@ -1,0 +1,9 @@
+{
+  "label": "Maintainers",
+  "position": 2,
+  "link": {
+    "type": "generated-index",
+    "title": "Maintainer Docs",
+    "description": "Implementation and maintenance docs for contributors working directly in this repository."
+  }
+}

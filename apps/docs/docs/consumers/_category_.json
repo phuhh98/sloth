@@ -1,0 +1,9 @@
+{
+  "label": "Consumers",
+  "position": 1,
+  "link": {
+    "type": "generated-index",
+    "title": "Consumer Docs",
+    "description": "Guides and references for users integrating sloth contracts and APIs."
+  }
+}

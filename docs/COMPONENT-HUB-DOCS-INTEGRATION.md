@@ -1,5 +1,5 @@
 ---
-purpose: "Define how component-hub becomes the source of truth for registry artifacts and React component implementations used by the docs site."
+purpose: "Historical notes for pre-OCI docs registry sync before contracts package became the source of truth for registry artifacts."
 status: "superseded"
 owner: "platform"
 last_updated: "2026-05-10"
@@ -28,7 +28,7 @@ Keep this file for historical context only. Active planning is tracked in regist
 
 ## Goal
 
-Use `packages/component-hub` as the single source for:
+Use `packages/contracts` as the single source for:
 
 - component contracts
 - component manifests
@@ -38,12 +38,12 @@ Then, during docs build, publish contract artifacts into:
 
 - `apps/docs/static/registry/contracts/`
 
-This keeps GitHub Pages as a simple static host while moving source ownership to `component-hub`.
+This keeps GitHub Pages as a simple static host while moving source ownership to `packages/contracts`.
 
-## Proposed Source Structure (`packages/component-hub`)
+## Proposed Source Structure (`packages/contracts`)
 
 ```text
-packages/component-hub/
+packages/contracts/
   package.json
   src/
     contracts/
@@ -75,11 +75,11 @@ packages/component-hub/
 ## Build-Time Integration Flow
 
 1. Install workspace dependencies with `pnpm install`.
-2. Build component-hub artifacts:
-   - `pnpm --filter @sloth/component-hub run build:registry`
+2. Build contracts artifacts:
+   - `pnpm --filter @sloth/contracts run build:registry`
 3. Sync built contracts/manifests into docs static hosting path:
 
-- copy from `packages/component-hub/dist/registry/contracts/**`
+- copy from `packages/contracts/dist/registry/contracts/**`
 - to `apps/docs/static/registry/contracts/**`
 - keep generated `apps/docs/static/registry/**` artifacts committed in git (versioned folders, indexes, and state)
 
@@ -93,26 +93,25 @@ packages/component-hub/
 
 ## Proposed Scripts and Tasks
 
-At package level (`packages/component-hub/package.json`):
+At package level (`packages/contracts/package.json`):
 
 - `build:registry` — validates contracts and emits immutable artifacts under `dist/registry`
-- `build:react` — compiles basic React implementations under `dist/react`
 - `contracts:workflow` — release helper for contract version management:
-  - `pnpm --filter @sloth/component-hub run contracts:workflow sync --release <version>` refreshes manifest component hashes from current contract files
-  - `pnpm --filter @sloth/component-hub run contracts:workflow create --from <old> --to <new>` clones a release folder, bumps contract `version` fields, and syncs the new manifest
-- `build` — runs both targets
+  - `pnpm --filter @sloth/contracts run contracts:workflow sync --release <version>` refreshes manifest component hashes from current contract files
+  - `pnpm --filter @sloth/contracts run contracts:workflow create --from <old> --to <new>` clones a release folder, bumps contract `version` fields, and syncs the new manifest
+- `build` — runs contract validation and registry artifact generation
 
 At docs level (`apps/docs/package.json`):
 
-- `registry:prepare` — build component-hub contract release artifacts and sync into docs `static/registry/contracts`
+- `registry:prepare` — build contracts package release artifacts and sync into docs `static/registry/contracts`
 - `prebuild` — run `registry:prepare` before docs build
 - `prestart` — run `registry:prepare` before local docs dev
 
 At root task level (`Taskfile.yml`):
 
-- `build-component-hub` — run component-hub build
+- `build-contracts` — run contracts package build
 - `sync-docs-registry` — run docs registry sync and index generation
-- `build-docs` — depends on component-hub build and docs registry sync before Docusaurus build
+- `build-docs` — depends on contracts build and docs registry sync before Docusaurus build
 
 ## Versioning Rules
 
@@ -134,12 +133,12 @@ Before copying to docs static registry:
 ## Why This Direction
 
 - avoids duplicate manual editing in `apps/docs/static`
-- keeps ownership in a dedicated package (`component-hub`)
+- keeps ownership in a dedicated package (`packages/contracts`)
 - allows future npm/git distribution using the same artifacts
 - keeps GitHub Pages deployment simple and static-host-only
 
 ## Open Questions
 
-- Should component-hub publish artifacts as npm package files in addition to workspace sync?
+- Should contracts package artifacts also be published as npm package files in addition to workspace sync?
 - Should React implementation output include TypeScript declarations for downstream consumers?
 - Should docs build fail hard if any contract validation fails, or allow warning mode in early phase?

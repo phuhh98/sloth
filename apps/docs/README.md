@@ -2,6 +2,20 @@
 
 This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
 
+## Documentation Groups
+
+- Consumer-facing pages live in `apps/docs/docs/consumers/`.
+- Repository-maintainer pages live in `apps/docs/docs/repo-developers/`.
+- Keep cross-links explicit when consumer pages reference maintainer workflows.
+
+## Schema Sync Note
+
+Before building docs for release, sync promoted schema versions from GHCR artifacts into:
+
+`apps/docs/static/schemas/<artifact>/<version>/schema.json`
+
+Then build Docusaurus output so canonical `$schema` URLs resolve from docs static hosting.
+
 ## Installation
 
 ```bash

@@ -124,8 +124,8 @@ If any check fails, verification returns blocking errors and push/add operations
 
 - `sloth contracts ls --version <version|latest>`
 - `sloth contracts pull --name <component> --version <version|latest> [--out <path>]`
-- `sloth contracts verify --file <contract.json> [--plugin-version <version>]`
-- `sloth contracts push --plugin-version <version>`
+- `sloth contracts verify --file <contract.json> [--version <version|latest>]`
+- `sloth contracts push --version <version|latest>`
 
 Notes:
 
@@ -154,7 +154,7 @@ When incompatible version is detected, return a blocking error:
 - code: `ERR_SCHEMA_VERSION_INCOMPATIBLE`
 - include:
   - host schema version
-  - requested plugin version
+  - requested contract release version
   - supported version range
   - remediation hint (use compatible version or update plugin first)
 

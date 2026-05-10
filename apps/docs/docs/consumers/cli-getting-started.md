@@ -46,6 +46,7 @@ The CLI resolves configuration with explicit precedence:
 Set host URL and token in `.sloth/config.yaml`:
 
 ```yaml
+# yaml-language-server: $schema=https://phuhh98.github.io/sloth/schemas/cli-config/0.0.1/schema.json
 currentProfile: default
 profiles:
   default:
@@ -55,6 +56,10 @@ profiles:
     host: https://api.production.example.com
     authorizationToken: ""
 ```
+
+Schema reference URL:
+
+- [https://phuhh98.github.io/sloth/schemas/cli-config/0.0.1/schema.json](https://phuhh98.github.io/sloth/schemas/cli-config/0.0.1/schema.json)
 
 Use profile selection:
 
@@ -77,7 +82,7 @@ Example in CI/CD:
 ```bash
 export SLOTH_HOST=https://api.production.example.com
 export SLOTH_AUTHORIZATION_TOKEN=secret-token-xyz
-sloth contracts push --plugin-version 0.0.1
+sloth contracts push --version 0.0.1
 ```
 
 ### Runtime Flag Override
@@ -106,30 +111,30 @@ sloth contracts inspect --format table
 2. List available contracts for a plugin version.
 
 ```bash
-sloth contracts list --plugin-version 0.0.1 --format table
+sloth contracts ls --version 0.0.1 --format table
 ```
 
 3. Add contracts locally.
 
 ```bash
-sloth contracts add --all --plugin-version 0.0.1
+sloth contracts add --all --version 0.0.1
 ```
 
 4. Verify local contract files.
 
 ```bash
-sloth contracts verify --file .sloth/contracts/hero-banner@0.0.1.json --plugin-version 0.0.1
+sloth contracts verify --file .sloth/contracts/hero-banner@0.0.1.json --version 0.0.1
 ```
 
 5. Push verified contracts.
 
 ```bash
-sloth contracts push --plugin-version 0.0.1 --dry-run
-sloth contracts push --plugin-version 0.0.1
+sloth contracts push --version 0.0.1 --dry-run
+sloth contracts push --version 0.0.1
 ```
 
 ## Next
 
 - See [CLI Command Reference](./cli-contract) for all commands and flags.
-- See [CLI Validation and Testing](./cli-validation-and-testing) for mock coverage and host verification strategy.
-- See [CLI Distribution and Release](./cli-distribution-and-release) for cross-platform build and npm packaging.
+- See [CLI Validation and Testing](../repo-developers/cli-validation-and-testing) for mock coverage and host verification strategy.
+- See [CLI Distribution and Release](../repo-developers/cli-distribution-and-release) for cross-platform build and npm packaging.

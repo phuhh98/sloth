@@ -32,10 +32,17 @@ Before a standalone registry metadata API is introduced, sloth uses OCI artifact
 
 Near-term approach:
 
-- source contracts from `packages/component-hub/src/contracts/components/`
+- source contracts from `packages/contracts/src/contracts/components/`
 - package the contract folder as versioned OCI artifacts in GHCR
+- source component-contract schema from `packages/contracts` and publish versioned schema artifacts to GHCR
 - use CLI-level abstraction over OCI internals via contract commands
 - use ORAS Go SDK in CLI for pull/list behavior
+
+Schema URL policy:
+
+- keep `$schema` in contract files pointed to a stable HTTPS document URL
+- treat GHCR as immutable artifact storage and provenance source, not the canonical `$schema` URL endpoint
+- mirror promoted schema versions from contracts release artifacts into docs-hosted static paths for validator/editor compatibility
 
 This keeps distribution immutable and CDN-backed while avoiding custom registry API complexity.
 
@@ -156,7 +163,9 @@ Before public launch, enforce:
 
 Phase 1: Free public registry MVP
 
-- component-hub sourced immutable artifacts published to GHCR as OCI artifacts
+- contracts package sourced immutable artifacts published to GHCR as OCI artifacts
+- component-contract schema versions published to GHCR as OCI artifacts from `packages/contracts` source
+- docs-hosted schema URL retained as canonical `$schema` endpoint and synchronized from published schema artifacts
 - CLI ORAS-based list and pull behavior under `contracts` command group
 - integration testing against local Zot OCI registry in docker compose on-demand profile
 
@@ -174,3 +183,4 @@ Phase 3: Paid marketplace
 - Should compatibility checks be strict-fail or warning-first?
 - Should registry packages include executable frontend runtime code, or config-only artifacts?
 - What namespace policy should be used for organizations and publishers?
+- Should schema publication and contract publication share a single OCI artifact layout or separate repositories in GHCR?

@@ -63,5 +63,5 @@ To reduce risk before release:
 
 ## Related
 
-- [CLI Command Reference](./cli-contract)
-- [CLI Getting Started](./cli-getting-started)
+- [CLI Command Reference](../consumers/cli-contract)
+- [CLI Getting Started](../consumers/cli-getting-started)

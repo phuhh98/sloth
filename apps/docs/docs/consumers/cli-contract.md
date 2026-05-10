@@ -11,13 +11,14 @@ For onboarding and workflow guidance, start with [CLI Getting Started](./cli-get
 ## Commands
 
 - `sloth init`
-- `sloth contracts list --plugin-version <version> [--source local] [--format table|json]`
+- `sloth contracts ls --version <version|latest> [--source local|oci] [--format table|json]`
 - `sloth contracts inspect --profile <name> [--format table|json]`
-- `sloth contracts add component --name <component> --plugin-version <version>`
-- `sloth contracts add set --name <set-name> --plugin-version <version>`
-- `sloth contracts add --all --plugin-version <version>`
-- `sloth contracts verify --file <contract.json> --plugin-version <version>`
-- `sloth contracts push --plugin-version <version> [--dry-run] [--retries <n>]`
+- `sloth contracts pull --name <component> --version <version|latest> [--out <path>]`
+- `sloth contracts add component --name <component> --version <version|latest>`
+- `sloth contracts add set --name <set-name> --version <version|latest>`
+- `sloth contracts add --all --version <version|latest>`
+- `sloth contracts verify --file <contract.json> --version <version|latest>`
+- `sloth contracts push --version <version|latest> [--dry-run] [--retries <n>]`
 
 ## Local Workspace
 
@@ -81,6 +82,11 @@ Use Taskfile commands for build and packaging:
 - `task cli-smoke-install`
 - `task cli-release-prep`
 
+Use OCI registry lifecycle commands for local real-registry testing:
+
+- `task oci-registry-up`
+- `task oci-registry-down`
+
 Generated artifacts:
 
 - `packages/cli/dist/bin/<os>-<arch>/sloth[.exe]`
@@ -90,5 +96,5 @@ Generated artifacts:
 ## Related
 
 - [CLI Getting Started](./cli-getting-started)
-- [CLI Validation and Testing](./cli-validation-and-testing)
-- [CLI Distribution and Release](./cli-distribution-and-release)
+- [CLI Validation and Testing](../repo-developers/cli-validation-and-testing)
+- [CLI Distribution and Release](../repo-developers/cli-distribution-and-release)

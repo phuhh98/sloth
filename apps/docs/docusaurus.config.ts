@@ -77,11 +77,11 @@ const config: Config = {
           items: [
             {
               label: "Overview",
-              to: "/docs/intro",
+              to: "/docs/consumers/intro",
             },
             {
               label: "Schemas",
-              to: "/docs/schemas",
+              to: "/docs/consumers/schemas",
             },
           ],
         },

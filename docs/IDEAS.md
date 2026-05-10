@@ -246,12 +246,12 @@ Suggested command shape:
   - inspect host plugin status and current component inventory summary
 - `sloth contracts pull --name <name> --version <version|latest>`
   - pull an individual contract from registry for selected release
-- `sloth contracts add component --name <name> --plugin-version <version>`
-- `sloth contracts add set --name <set-name> --plugin-version <version>`
-- `sloth contracts add --all --plugin-version <version>`
-- `sloth contracts verify --file <contract.json> [--plugin-version <version>]`
+- `sloth contracts add component --name <name> --version <version|latest>`
+- `sloth contracts add set --name <set-name> --version <version|latest>`
+- `sloth contracts add --all --version <version|latest>`
+- `sloth contracts verify --file <contract.json> [--version <version|latest>]`
   - validate schema compatibility and name-collision rules before push
-- `sloth contracts push --plugin-version <version>`
+- `sloth contracts push --version <version|latest>`
   - verify -> inspect remote -> compare drift -> ingest to host
 
 Flags:
@@ -433,7 +433,7 @@ CLI flow:
 2. Run `sloth contracts ls --version <version|latest>`.
 3. Run `sloth contracts pull --name <contract> --version <version|latest>` (or `contracts add ...`).
 4. Run `sloth contracts verify --file <contract.json>` for custom contracts.
-5. Run `sloth contracts push --plugin-version <version>`.
+5. Run `sloth contracts push --version <version|latest>`.
 
 ## 13) Security and Governance Baseline
 

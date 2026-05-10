@@ -14,22 +14,23 @@ apps/
 
 packages/
   cli/          # sloth CLI (Go + Cobra) — contract operations
-  component-hub/# Reusable theme and component variants
+  contracts/    # Contract source, release tooling, and OCI artifacts
+  component-hub/# Placeholder for future frontend component/runtime package
   strapi-plugin/# Core sloth Strapi plugin
 
 docs/           # Internal planning docs — architecture, ADRs, ideas
-contracts/      # Canonical JSON Schema source files
+packages/contracts/src/schemas/ # Canonical JSON Schema source files
 ```
 
 ## Prerequisites
 
-| Tool | Version | Install |
-|------|---------|---------|
-| Node.js | ≥ 20 | [nodejs.org](https://nodejs.org) |
-| pnpm | 9.x | `npm i -g pnpm` |
-| go-task | latest | `brew install go-task` |
-| Docker | latest | [docker.com](https://docker.com) |
-| Go | ≥ 1.22 | [go.dev](https://go.dev) (CLI only) |
+| Tool    | Version | Install                             |
+| ------- | ------- | ----------------------------------- |
+| Node.js | ≥ 20    | [nodejs.org](https://nodejs.org)    |
+| pnpm    | 9.x     | `npm i -g pnpm`                     |
+| go-task | latest  | `brew install go-task`              |
+| Docker  | latest  | [docker.com](https://docker.com)    |
+| Go      | ≥ 1.22  | [go.dev](https://go.dev) (CLI only) |
 
 ## Getting Started
 
@@ -49,15 +50,15 @@ task --list
 
 Key tasks:
 
-| Task | Description |
-|------|-------------|
-| `task start-strapi-dev` | Start the Strapi development server |
-| `task build-plugin` | Build the strapi-plugin package |
-| `task watch-plugin` | Watch and rebuild the plugin on changes |
-| `task start-docs` | Start the docs site dev server (port 3000) |
-| `task build-docs` | Build the docs site for production |
-| `task start-dev-all` | Start all services (Docker + Strapi) |
-| `task stop-dev-all` | Stop all running services |
+| Task                    | Description                                |
+| ----------------------- | ------------------------------------------ |
+| `task start-strapi-dev` | Start the Strapi development server        |
+| `task build-plugin`     | Build the strapi-plugin package            |
+| `task watch-plugin`     | Watch and rebuild the plugin on changes    |
+| `task start-docs`       | Start the docs site dev server (port 3000) |
+| `task build-docs`       | Build the docs site for production         |
+| `task start-dev-all`    | Start all services (Docker + Strapi)       |
+| `task stop-dev-all`     | Stop all running services                  |
 
 ## Plugin Development
 

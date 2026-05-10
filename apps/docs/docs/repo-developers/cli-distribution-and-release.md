@@ -62,5 +62,5 @@ The wrapper executable script resolves platform and arch at runtime, then runs t
 
 ## Related
 
-- [CLI Getting Started](./cli-getting-started)
-- [CLI Command Reference](./cli-contract)
+- [CLI Getting Started](../consumers/cli-getting-started)
+- [CLI Command Reference](../consumers/cli-contract)
