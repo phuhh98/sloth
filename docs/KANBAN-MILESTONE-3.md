@@ -18,8 +18,8 @@ Use this board for detailed execution tracking of one milestone.
 
 - Milestone: Milestone 3 - Component Hub Starter + Renderer Examples
 - Goal: Publish starter packs and runtime integration examples for rendering page payloads with component mappings
-- Constraints: Keep core milestone under 20 tasks; HUB-001..HUB-007 (7 tasks) plus PUB-001..PUB-004 (4 tasks, Milestone 2 follow-up)
-- milestone_updated_at: 2026-05-10T23:30:00Z
+- Constraints: Keep core milestone under 20 tasks; HUB-000..HUB-012 (13 tasks) plus PUB-001..PUB-004 (4 tasks, Milestone 2 follow-up)
+- milestone_updated_at: 2026-05-11T00:05:00Z
 
 ### Task Decomposition Rules
 
@@ -46,11 +46,35 @@ Task card format (keep concise):
 
 ## To Do
 
+- [ ] HUB-000: Finalize dynamic content component shortlist and SEO mapping
+  - what: Lock first-class dynamic content contracts for article/post ecosystems before schema implementation.
+  - do: Validate starter set for feed, related carousel, article teaser, author, breadcrumb, and seo-head components.
+  - next: Feed approved list into static/dynamic block planning tasks.
+  - deps: none
+  - requires-confirmation: true
+  - status: todo
+
+- [ ] HUB-008: Finalize static block shortlist and priorities
+  - what: Lock static/reusable blocks and sections used across non-dynamic pages.
+  - do: Validate Text, Card, Stat, CTA, Features, Testimonials, FAQ, Pricing, and base layout wrappers.
+  - next: Feed approved static set into shared block contract draft.
+  - deps: none
+  - requires-confirmation: true
+  - status: todo
+
+- [ ] HUB-009: Define shared layout/section/block base contract and SEO slots
+  - what: Establish common attributes for all component contracts plus SEO behavior boundaries.
+  - do: Specify base fields (id, rendererKey, visibility, style tokens, dataSource), section metadata, and block-level SEO contribution model.
+  - next: Use shared base contract in HUB-001 starter pack manifest and per-component schemas.
+  - deps: HUB-000, HUB-008
+  - requires-confirmation: false
+  - status: todo
+
 - [ ] HUB-001: Define starter pack manifest schema
   - what: Create starter pack manifest contract for component hub artifacts.
   - do: Add JSON schema and TS types for pack metadata and component references.
   - next: Implement validator and build script.
-  - deps: none
+  - deps: HUB-009
   - requires-confirmation: false
   - status: todo
 
@@ -102,6 +126,30 @@ Task card format (keep concise):
   - requires-confirmation: false
   - status: todo
 
+- [ ] HUB-010: Define OpenAPI contract for sloth CMS-agnostic API surface
+  - what: Define `openapi.yaml` for inspection, contract discovery, and ingest APIs using a general CMS integration model (not Strapi-specific).
+  - do: Draft OpenAPI paths/schemas based on docs/IDEAS.md intent, including auth, errors, pagination, and versioning policy.
+  - next: Use OpenAPI as source for mock-server behavior and integration contract tests.
+  - deps: HUB-009
+  - requires-confirmation: true
+  - status: todo
+
+- [ ] HUB-011: Build component-hub mock server with seeded contract set
+  - what: Provide a deterministic mock server inside component-hub that serves a defined starter contract dataset via the OpenAPI spec.
+  - do: Implement mock endpoints, seed fixtures (static + dynamic contracts), and runner scripts for local/CI execution.
+  - next: Run CLI integration tests against mock server.
+  - deps: HUB-003, HUB-010
+  - requires-confirmation: false
+  - status: todo
+
+- [ ] HUB-012: Add CLI integration tests against OpenAPI mock server and track gaps
+  - what: Validate `sloth` CLI behavior end-to-end using OpenAPI-defined mock server + seeded contracts.
+  - do: Add integration test suite for list/inspect/add/verify/push flows, assert outputs/errors, and record known flaws with improvement notes.
+  - next: Prioritize fixes and feed defects into next milestone backlog.
+  - deps: HUB-011
+  - requires-confirmation: false
+  - status: todo
+
 **Post-Milestone-2 Follow-up: CLI Publishing Automation (requires user intervention)**
 
 - [ ] PUB-001: GitHub Actions CI/CD workflow for CLI release
@@ -140,7 +188,7 @@ Task card format (keep concise):
 
 - [ ] None
   - what: no active task
-  - do: start HUB-001 when milestone 3 execution begins
+  - do: start HUB-000 and HUB-008 when milestone 3 execution begins
   - next: scaffold schema and type definitions
   - deps: none
   - status: in-progress
@@ -165,6 +213,9 @@ Task card format (keep concise):
 
 ### Dependency Plan
 
+- HUB-000 -> HUB-009
+- HUB-008 -> HUB-009
+- HUB-009 -> HUB-001
 - HUB-001 -> HUB-002
 - HUB-002 -> HUB-003
 - HUB-003 -> HUB-004
@@ -172,6 +223,10 @@ Task card format (keep concise):
 - HUB-004 -> HUB-005
 - HUB-005 -> HUB-007
 - HUB-006 -> HUB-007
+- HUB-009 -> HUB-010
+- HUB-003 -> HUB-011
+- HUB-010 -> HUB-011
+- HUB-011 -> HUB-012
 - PUB-001 -> PUB-002
 - PUB-003 -> PUB-004
 
@@ -181,12 +236,21 @@ Task card format (keep concise):
   - Runtime payload shape may evolve while plugin delivery contracts are still maturing.
 - Decisions:
   - Start with one starter pack before broadening pack catalog.
+  - Add HUB-000 and HUB-008 as gating refinement tasks for dynamic and static component contract sets.
+  - Add HUB-009 to standardize shared layout/section/block fields and SEO mapping before schema implementation.
+  - Add HUB-010 to standardize a CMS-agnostic API contract via OpenAPI before mock/integration testing.
+  - Add HUB-011/HUB-012 to validate CLI against deterministic API behavior and capture quality gaps.
   - HUB-001..HUB-007 are Milestone 3 core scope; PUB-001..PUB-004 are Milestone 2 follow-up (CLI publishing automation).
   - User confirmation required for all PUB-\* tasks (credential setup, release policy, runbook validation).
 - Next:
-  - Start HUB-001.
+  - Start HUB-000 and HUB-008.
+  - Schedule HUB-010 after HUB-009 approval, then execute HUB-011 and HUB-012 in sequence.
   - PUB tasks can run in parallel with HUB tasks or scheduled after Milestone 3 completion based on priority.
 
 ### Archival
 
 When this milestone is complete, move this file to `docs/archive/` and create a fresh board in `docs/` for the next milestone.
+
+Additional archival rule:
+
+- When a task is completed and its related reference docs are not expected to be reused, move those docs into `docs/archive/`.

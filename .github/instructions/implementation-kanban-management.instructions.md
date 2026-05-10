@@ -33,6 +33,7 @@ When working on implementation plans and milestones in this repository:
 - Avoid chronological logs or per-task timestamp history.
 - Record timestamp only at milestone level (for example `milestone_updated_at`).
 - When a milestone is completed, move its Kanban file from `docs/` to `docs/archive/`.
+- When a task is completed and its related reference docs are not expected to be reused, move those docs into `docs/archive/`.
 - When starting work on a new milestone from the implementation plan, initialize a new Kanban board in `docs/`.
 - Keep board titles and ticket labels aligned with milestone names used in `docs/MILESTONES.md`.
 - Update the board continuously during execution so users can monitor completed work and next tasks without reading commit history.
