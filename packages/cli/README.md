@@ -8,7 +8,7 @@ The CLI is implemented in Go (Cobra) and distributed via npm-compatible packagin
 
 Primary scope:
 
-- component contract workflows (list, inspect, add, verify, push)
+- component contract workflows (list, inspect, pull, add, verify, push)
 - local `.sloth` workspace management
 - cross-platform binary build and package generation
 
@@ -67,6 +67,29 @@ Environment variables:
 - `SLOTH_PROFILE`: profile fallback when `--profile` is not provided
 - `SLOTH_HOST`: host fallback when YAML host is unavailable
 - `SLOTH_AUTHORIZATION_TOKEN` (or legacy `SLOTH_TOKEN`): token fallback when YAML token is unavailable
+- `SLOTH_REGISTRY_HOST`: OCI registry host fallback when YAML registry host is unavailable
+- `SLOTH_REGISTRY_REPOSITORY`: OCI repository fallback when YAML registry repository is unavailable
+- `SLOTH_REGISTRY_USE_AUTHORIZATION_TOKEN`: OCI token usage flag fallback (`true|false`)
+
+OCI registry config lives under each profile:
+
+```yaml
+currentProfile: default
+profiles:
+  default:
+    host: http://localhost:1337
+    authorizationToken: ""
+    registry:
+      host: ghcr.io
+      repository: phuhh98/sloth/contracts
+      useAuthorizationToken: true
+```
+
+Use OCI-backed contract source:
+
+```bash
+sloth contracts ls --source oci --version latest
+```
 
 Built-in defaults:
 

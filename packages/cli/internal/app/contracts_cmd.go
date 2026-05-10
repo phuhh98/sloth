@@ -8,10 +8,12 @@ func newContractsCommand(opts *Options) *cobra.Command {
 		Short: "Manage local and remote component contracts",
 	}
 
-	contractsCmd.PersistentFlags().StringVar(&opts.PluginVersion, "plugin-version", "", "Target plugin version")
-	contractsCmd.PersistentFlags().StringVar(&opts.Source, "source", "local", "Contract source: local")
+	contractsCmd.PersistentFlags().StringVar(&opts.PluginVersion, "version", "latest", "Target contract release version (x.y.z|latest)")
+	contractsCmd.PersistentFlags().StringVar(&opts.PluginVersion, "plugin-version", "latest", "Deprecated alias for --version")
+	contractsCmd.PersistentFlags().StringVar(&opts.Source, "source", "local", "Contract source: local|oci")
 
 	contractsCmd.AddCommand(newContractsListCommand(opts))
+	contractsCmd.AddCommand(newContractsPullCommand(opts))
 	contractsCmd.AddCommand(newContractsInspectCommand(opts))
 	contractsCmd.AddCommand(newContractsAddCommand(opts))
 	contractsCmd.AddCommand(newContractsVerifyCommand(opts))

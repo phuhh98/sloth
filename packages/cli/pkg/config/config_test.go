@@ -37,3 +37,20 @@ func TestLoadAndResolveProfile(t *testing.T) {
 		t.Fatalf("unexpected token %s", token)
 	}
 }
+
+func TestEnvSettingsFromOSRegistryFields(t *testing.T) {
+	t.Setenv(EnvRegistryHost, "ghcr.io")
+	t.Setenv(EnvRegistryRepository, "phuhh98/sloth/contracts")
+	t.Setenv(EnvRegistryUseAuth, "false")
+
+	settings := EnvSettingsFromOS()
+	if settings.RegistryHost != "ghcr.io" {
+		t.Fatalf("expected registry host ghcr.io, got %q", settings.RegistryHost)
+	}
+	if settings.RegistryRepository != "phuhh98/sloth/contracts" {
+		t.Fatalf("expected repository phuhh98/sloth/contracts, got %q", settings.RegistryRepository)
+	}
+	if settings.RegistryUseAuth == nil || *settings.RegistryUseAuth {
+		t.Fatalf("expected registry use auth false, got %v", settings.RegistryUseAuth)
+	}
+}

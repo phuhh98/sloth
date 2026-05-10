@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/phuhh98/sloth/packages/cli/pkg/config"
+	"github.com/phuhh98/sloth/packages/cli/pkg/registry"
 	"github.com/phuhh98/sloth/packages/cli/pkg/source"
 	"github.com/spf13/cobra"
 )
@@ -79,8 +80,27 @@ func (o *Options) ResolveConfig() (*config.File, string, config.Profile, error) 
 	if strings.TrimSpace(profile.AuthorizationToken) == "" {
 		profile.AuthorizationToken = env.AuthorizationToken
 	}
+	if strings.TrimSpace(profile.Registry.Host) == "" {
+		profile.Registry.Host = env.RegistryHost
+	}
+	if strings.TrimSpace(profile.Registry.Repository) == "" {
+		profile.Registry.Repository = env.RegistryRepository
+	}
+	if profile.Registry.UseAuthorizationToken == nil {
+		profile.Registry.UseAuthorizationToken = env.RegistryUseAuth
+	}
 	if strings.TrimSpace(profile.Host) == "" {
 		profile.Host = config.DefaultHost
+	}
+	if strings.TrimSpace(profile.Registry.Host) == "" {
+		profile.Registry.Host = config.DefaultRegistryHost
+	}
+	if strings.TrimSpace(profile.Registry.Repository) == "" {
+		profile.Registry.Repository = config.DefaultRegistryRepository
+	}
+	if profile.Registry.UseAuthorizationToken == nil {
+		v := config.DefaultRegistryUseAuthorizationToken
+		profile.Registry.UseAuthorizationToken = &v
 	}
 	if strings.TrimSpace(name) == "" {
 		name = config.DefaultProfileName
@@ -99,6 +119,25 @@ func (o *Options) ResolveConfig() (*config.File, string, config.Profile, error) 
 }
 
 func (o *Options) Resolver() source.Resolver {
+	if strings.TrimSpace(o.Source) == "oci" {
+		_, _, profile, err := o.ResolveConfig()
+		if err != nil {
+			return source.NewErrorResolver(err)
+		}
+
+		client, err := registry.NewOCIClient(registry.OCIClientOptions{
+			Host:                  profile.Registry.Host,
+			Repository:            profile.Registry.Repository,
+			AuthorizationToken:    config.EffectiveToken(profile, o.TokenOverride),
+			UseAuthorizationToken: profile.Registry.UseAuthorizationToken != nil && *profile.Registry.UseAuthorizationToken,
+		})
+		if err != nil {
+			return source.NewErrorResolver(err)
+		}
+
+		return source.NewOCIRegistryResolver(client)
+	}
+
 	base := filepath.Join(o.WorkingDir, "apps", "docs", "static", "registry", "contracts")
 	return source.NewLocalRegistryResolver(base)
 }

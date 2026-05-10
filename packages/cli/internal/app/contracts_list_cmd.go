@@ -10,6 +10,7 @@ import (
 func newContractsListCommand(opts *Options) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list",
+		Aliases: []string{"ls"},
 		Short: "List available contracts for a plugin version",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			resolver := opts.Resolver()

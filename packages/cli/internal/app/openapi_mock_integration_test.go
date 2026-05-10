@@ -42,7 +42,7 @@ func TestCLIFlowWithOpenAPIMockServer(t *testing.T) {
 		t.Fatalf("inspect output missing mock host payload: %s", inspectOut)
 	}
 
-	listOut, err := runCommandInDir(t, tmp, "contracts", "list", "--plugin-version", "0.0.1", "--format", "json")
+	listOut, err := runCommandInDir(t, tmp, "contracts", "ls", "--version", "0.0.1", "--format", "json")
 	if err != nil {
 		t.Fatalf("list command failed: %v", err)
 	}
@@ -50,7 +50,7 @@ func TestCLIFlowWithOpenAPIMockServer(t *testing.T) {
 		t.Fatalf("list output missing hero-banner: %s", listOut)
 	}
 
-	if _, err := runCommandInDir(t, tmp, "contracts", "add", "--all", "--plugin-version", "0.0.1", "--format", "json"); err != nil {
+	if _, err := runCommandInDir(t, tmp, "contracts", "add", "--all", "--version", "0.0.1", "--format", "json"); err != nil {
 		t.Fatalf("add --all command failed: %v", err)
 	}
 
@@ -74,7 +74,7 @@ func TestCLIFlowWithOpenAPIMockServer(t *testing.T) {
 		"verify",
 		"--file",
 		customContractPath,
-		"--plugin-version",
+		"--version",
 		"0.0.1",
 		"--supported-range",
 		">=0.0.1",
@@ -115,7 +115,7 @@ func TestCLIFlowWithOpenAPIMockServer(t *testing.T) {
 func startOpenAPIMockServer(t *testing.T) (int, func()) {
 	t.Helper()
 	_, currentFile, _, _ := runtime.Caller(0)
-	mockScriptPath := filepath.Clean(filepath.Join(currentFile, "..", "..", "..", "..", "component-hub", "scripts", "openapi-mock-server.mjs"))
+	mockScriptPath := filepath.Clean(filepath.Join(currentFile, "..", "..", "..", "..", "contracts", "scripts", "openapi-mock-server.mjs"))
 
 	cmd := exec.Command("node", mockScriptPath, "--port", "0")
 	stdout, err := cmd.StdoutPipe()

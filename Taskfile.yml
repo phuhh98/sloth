@@ -136,17 +136,38 @@ tasks:
     cmds:
       - docker-compose down
 
-  start-frontend-dev:
-    internal: true
-    desc: Start frontend in development mode
-    dir: ./apps/frontend
-    cmds: ["pnpm run dev"]
+  oci-registry-up:
+    desc: Start local Zot OCI registry for CLI integration testing
+    cmds:
+      - docker compose -f docker-compose.oci-registry.yaml --profile oci-test up -d
+
+  oci-registry-down:
+    desc: Stop local Zot OCI registry test service
+    cmds:
+      - docker compose -f docker-compose.oci-registry.yaml --profile oci-test down
 
   cli-test:
     desc: Run Go tests for sloth CLI
     dir: ./packages/cli
     cmds:
       - go test ./...
+
+  cli-test-zot-integration:
+    desc: Run CLI integration test against local Zot OCI registry
+    cmds:
+      - |
+        bash -s <<'BASH'
+        set -euo pipefail
+
+        task oci-registry-up
+        cleanup() {
+          task oci-registry-down
+        }
+        trap cleanup EXIT
+
+        cd ./packages/cli
+        SLOTH_RUN_ZOT_INTEGRATION=1 go test ./internal/app -run TestContractsListAndPullWithZot -count=1
+        BASH
 
   cli-build-cross:
     desc: Build cross-platform sloth CLI binaries and checksums

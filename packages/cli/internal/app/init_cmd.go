@@ -28,7 +28,7 @@ func newInitCommand(opts *Options) *cobra.Command {
 				if err := os.MkdirAll(filepath.Dir(cfgPath), 0o755); err != nil {
 					return fmt.Errorf("create config directory: %w", err)
 				}
-				template := "currentProfile: default\nprofiles:\n  default:\n    host: http://localhost:1337\n    authorizationToken: \"\"\n"
+				template := "currentProfile: default\nprofiles:\n  default:\n    host: http://localhost:1337\n    authorizationToken: \"\"\n    registry:\n      host: ghcr.io\n      repository: phuhh98/sloth/contracts\n      useAuthorizationToken: true\n"
 				if err := os.WriteFile(cfgPath, []byte(template), 0o644); err != nil {
 					return fmt.Errorf("write default config file: %w", err)
 				}

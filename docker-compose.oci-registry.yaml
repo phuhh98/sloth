@@ -1,0 +1,15 @@
+services:
+  zot:
+    image: ghcr.io/project-zot/zot-linux-amd64:v2.1.8
+    container_name: sloth-zot
+    restart: unless-stopped
+    profiles: ["oci-test"]
+    command: ["serve", "/etc/zot/config.json"]
+    ports:
+      - "5001:5000"
+    volumes:
+      - ./packages/cli/testdata/zot/config.json:/etc/zot/config.json:ro
+      - sloth-zot-data:/var/lib/registry
+
+volumes:
+  sloth-zot-data:

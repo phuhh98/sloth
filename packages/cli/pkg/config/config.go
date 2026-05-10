@@ -14,6 +14,9 @@ import (
 const DefaultConfigRelativePath = ".sloth/config.yaml"
 const DefaultHost = "http://localhost:1337"
 const DefaultProfileName = "default"
+const DefaultRegistryHost = "ghcr.io"
+const DefaultRegistryRepository = "phuhh98/sloth/contracts"
+const DefaultRegistryUseAuthorizationToken = true
 
 const (
 	EnvConfigPath          = "SLOTH_CONFIG"
@@ -21,14 +24,24 @@ const (
 	EnvHost                = "SLOTH_HOST"
 	EnvAuthorizationToken  = "SLOTH_AUTHORIZATION_TOKEN"
 	EnvAuthorizationToken2 = "SLOTH_TOKEN"
+	EnvRegistryHost        = "SLOTH_REGISTRY_HOST"
+	EnvRegistryRepository  = "SLOTH_REGISTRY_REPOSITORY"
+	EnvRegistryUseAuth     = "SLOTH_REGISTRY_USE_AUTHORIZATION_TOKEN"
 )
 
 var ErrConfigNotFound = errors.New("sloth config file not found")
 
+type Registry struct {
+	Host                  string `yaml:"host,omitempty" json:"host,omitempty"`
+	Repository            string `yaml:"repository,omitempty" json:"repository,omitempty"`
+	UseAuthorizationToken *bool  `yaml:"useAuthorizationToken,omitempty" json:"useAuthorizationToken,omitempty"`
+}
+
 type Profile struct {
-	Host               string `yaml:"host" json:"host"`
-	Token              string `yaml:"token,omitempty" json:"token,omitempty"`
-	AuthorizationToken string `yaml:"authorizationToken,omitempty" json:"authorizationToken,omitempty"`
+	Host               string   `yaml:"host" json:"host"`
+	Token              string   `yaml:"token,omitempty" json:"token,omitempty"`
+	AuthorizationToken string   `yaml:"authorizationToken,omitempty" json:"authorizationToken,omitempty"`
+	Registry           Registry `yaml:"registry,omitempty" json:"registry,omitempty"`
 }
 
 type File struct {
@@ -41,19 +54,38 @@ type EnvSettings struct {
 	Profile            string
 	Host               string
 	AuthorizationToken string
+	RegistryHost       string
+	RegistryRepository string
+	RegistryUseAuth    *bool
 }
 
 func EnvSettingsFromOS() EnvSettings {
 	settings := EnvSettings{
-		ConfigPath: strings.TrimSpace(os.Getenv(EnvConfigPath)),
-		Profile:    strings.TrimSpace(os.Getenv(EnvProfile)),
-		Host:       strings.TrimSpace(os.Getenv(EnvHost)),
+		ConfigPath:         strings.TrimSpace(os.Getenv(EnvConfigPath)),
+		Profile:            strings.TrimSpace(os.Getenv(EnvProfile)),
+		Host:               strings.TrimSpace(os.Getenv(EnvHost)),
+		RegistryHost:       strings.TrimSpace(os.Getenv(EnvRegistryHost)),
+		RegistryRepository: strings.TrimSpace(os.Getenv(EnvRegistryRepository)),
 	}
 	settings.AuthorizationToken = strings.TrimSpace(os.Getenv(EnvAuthorizationToken))
 	if settings.AuthorizationToken == "" {
 		settings.AuthorizationToken = strings.TrimSpace(os.Getenv(EnvAuthorizationToken2))
 	}
+	settings.RegistryUseAuth = parseOptionalBool(os.Getenv(EnvRegistryUseAuth))
 	return settings
+}
+
+func parseOptionalBool(raw string) *bool {
+	switch strings.ToLower(strings.TrimSpace(raw)) {
+	case "1", "true", "yes", "on":
+		v := true
+		return &v
+	case "0", "false", "no", "off":
+		v := false
+		return &v
+	default:
+		return nil
+	}
 }
 
 func ResolvePath(workingDir string, configuredPath string, envPath string) string {
