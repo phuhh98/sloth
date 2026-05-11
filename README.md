@@ -86,7 +86,7 @@ pnpm run test:ts:front  # admin TypeScript check
 
 Public documentation is served from `apps/docs/` via GitHub Pages:
 
-- Live site: `https://phuhh98.github.io/sloth/`
+- Live site: [https://phuhh98.github.io/sloth/](https://phuhh98.github.io/sloth/)
 - Local: `task start-docs`
 
 Internal planning documents are in `docs/` (not public-facing).
