@@ -74,38 +74,12 @@ func (o *Options) ResolveConfig() (*config.File, string, config.Profile, error) 
 		}
 	}
 
-	if strings.TrimSpace(profile.Host) == "" {
-		profile.Host = env.Host
-	}
-	if strings.TrimSpace(profile.AuthorizationToken) == "" {
-		profile.AuthorizationToken = env.AuthorizationToken
-	}
-	if strings.TrimSpace(profile.Registry.Host) == "" {
-		profile.Registry.Host = env.RegistryHost
-	}
-	if strings.TrimSpace(profile.Registry.Repository) == "" {
-		profile.Registry.Repository = env.RegistryRepository
-	}
-	if profile.Registry.UseAuthorizationToken == nil {
-		profile.Registry.UseAuthorizationToken = env.RegistryUseAuth
-	}
-	if strings.TrimSpace(profile.Host) == "" {
-		profile.Host = config.DefaultHost
-	}
-	if strings.TrimSpace(profile.Registry.Host) == "" {
-		profile.Registry.Host = config.DefaultRegistryHost
-	}
-	if strings.TrimSpace(profile.Registry.Repository) == "" {
-		profile.Registry.Repository = config.DefaultRegistryRepository
-	}
-	if profile.Registry.UseAuthorizationToken == nil {
-		v := config.DefaultRegistryUseAuthorizationToken
-		profile.Registry.UseAuthorizationToken = &v
-	}
+	applyEnvToProfile(&profile, env)
+	applyProfileDefaults(&profile)
+
 	if strings.TrimSpace(name) == "" {
 		name = config.DefaultProfileName
 	}
-
 	if o.HostOverride != "" {
 		profile.Host = o.HostOverride
 	}
@@ -118,13 +92,43 @@ func (o *Options) ResolveConfig() (*config.File, string, config.Profile, error) 
 	return cfg, name, profile, nil
 }
 
-func (o *Options) Resolver() source.Resolver {
-	if strings.TrimSpace(o.Source) == "oci" {
-		_, _, profile, err := o.ResolveConfig()
-		if err != nil {
-			return source.NewErrorResolver(err)
-		}
+func applyEnvToProfile(p *config.Profile, env config.EnvSettings) {
+	if strings.TrimSpace(p.Host) == "" {
+		p.Host = env.Host
+	}
+	if strings.TrimSpace(p.AuthorizationToken) == "" {
+		p.AuthorizationToken = env.AuthorizationToken
+	}
+	if strings.TrimSpace(p.Registry.Host) == "" {
+		p.Registry.Host = env.RegistryHost
+	}
+	if strings.TrimSpace(p.Registry.Repository) == "" {
+		p.Registry.Repository = env.RegistryRepository
+	}
+	if p.Registry.UseAuthorizationToken == nil {
+		p.Registry.UseAuthorizationToken = env.RegistryUseAuth
+	}
+}
 
+func applyProfileDefaults(p *config.Profile) {
+	if strings.TrimSpace(p.Host) == "" {
+		p.Host = config.DefaultHost
+	}
+	if strings.TrimSpace(p.Registry.Host) == "" {
+		p.Registry.Host = config.DefaultRegistryHost
+	}
+	if strings.TrimSpace(p.Registry.Repository) == "" {
+		p.Registry.Repository = config.DefaultRegistryRepository
+	}
+	if p.Registry.UseAuthorizationToken == nil {
+		v := config.DefaultRegistryUseAuthorizationToken
+		p.Registry.UseAuthorizationToken = &v
+	}
+}
+
+
+func (o *Options) buildResolver(profile config.Profile) (source.Resolver, error) {
+	if strings.TrimSpace(o.Source) == "oci" {
 		client, err := registry.NewOCIClient(registry.OCIClientOptions{
 			Host:                  profile.Registry.Host,
 			Repository:            profile.Registry.Repository,
@@ -132,12 +136,26 @@ func (o *Options) Resolver() source.Resolver {
 			UseAuthorizationToken: profile.Registry.UseAuthorizationToken != nil && *profile.Registry.UseAuthorizationToken,
 		})
 		if err != nil {
-			return source.NewErrorResolver(err)
+			return nil, err
 		}
 
-		return source.NewOCIRegistryResolver(client)
+		return source.NewOCIRegistryResolver(client), nil
 	}
 
 	base := filepath.Join(o.WorkingDir, "apps", "docs", "static", "registry", "contracts")
-	return source.NewLocalRegistryResolver(base)
+	return source.NewLocalRegistryResolver(base), nil
+}
+
+func (o *Options) Resolver() source.Resolver {
+	_, _, profile, err := o.ResolveConfig()
+	if err != nil {
+		return source.NewErrorResolver(err)
+	}
+
+	resolver, err := o.buildResolver(profile)
+	if err != nil {
+		return source.NewErrorResolver(err)
+	}
+
+	return resolver
 }

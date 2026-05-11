@@ -37,17 +37,22 @@ func newContractsPullCommand(opts *Options) *cobra.Command {
 		Use:   "pull",
 		Short: "Pull one contract by name from the selected release version",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			meta, err := resolvePullContract(opts, contractName)
+			runtime, err := opts.BuildRuntime()
 			if err != nil {
 				return err
 			}
 
-			writeResult, err := writePulledContract(opts, meta, outPath)
+			meta, err := resolvePullContract(runtime, contractName)
 			if err != nil {
 				return err
 			}
 
-			return printPullOutput(cmd, opts, meta, writeResult)
+			writeResult, err := writePulledContract(runtime, meta, outPath)
+			if err != nil {
+				return err
+			}
+
+			return printPullOutput(cmd, runtime, meta, writeResult)
 		},
 	}
 
@@ -56,17 +61,16 @@ func newContractsPullCommand(opts *Options) *cobra.Command {
 	return cmd
 }
 
-func resolvePullContract(opts *Options, contractName string) (*pulledContractMeta, error) {
+func resolvePullContract(runtime *Runtime, contractName string) (*pulledContractMeta, error) {
 	if strings.TrimSpace(contractName) == "" {
 		return nil, fmt.Errorf("--name is required")
 	}
 
-	resolver := opts.Resolver()
-	contract, err := resolver.GetContract(opts.PluginVersion, contractName)
+	contract, err := runtime.Resolver.GetContract(runtime.PluginVersion, contractName)
 	if err != nil {
 		return nil, err
 	}
-	return newPulledContractMeta(contract, opts.PluginVersion, contractName)
+	return newPulledContractMeta(contract, runtime.PluginVersion, contractName)
 }
 
 func newPulledContractMeta(contract *source.Contract, requestedVersion string, requestedName string) (*pulledContractMeta, error) {
@@ -97,9 +101,9 @@ func newPulledContractMeta(contract *source.Contract, requestedVersion string, r
 	}, nil
 }
 
-func writePulledContract(opts *Options, meta *pulledContractMeta, outPath string) (*pullWriteResult, error) {
+func writePulledContract(runtime *Runtime, meta *pulledContractMeta, outPath string) (*pullWriteResult, error) {
 	if strings.TrimSpace(outPath) == "" {
-		return writePulledContractToWorkspace(opts, meta)
+		return writePulledContractToWorkspace(runtime, meta)
 	}
 
 	resolvedOutPath, err := resolveOutputPath(outPath, meta.Name, meta.Version)
@@ -114,12 +118,12 @@ func writePulledContract(opts *Options, meta *pulledContractMeta, outPath string
 	return &pullWriteResult{Path: writtenPath, ContentHash: hash}, nil
 }
 
-func writePulledContractToWorkspace(opts *Options, meta *pulledContractMeta) (*pullWriteResult, error) {
-	if err := workspace.Init(opts.WorkingDir); err != nil {
+func writePulledContractToWorkspace(runtime *Runtime, meta *pulledContractMeta) (*pullWriteResult, error) {
+	if err := workspace.Init(runtime.WorkingDir); err != nil {
 		return nil, err
 	}
 
-	writtenPath, hash, schemaVersion, err := workspace.SaveContract(opts.WorkingDir, meta.Payload)
+	writtenPath, hash, schemaVersion, err := workspace.SaveContract(runtime.WorkingDir, meta.Payload)
 	if err != nil {
 		return nil, err
 	}
@@ -127,15 +131,15 @@ func writePulledContractToWorkspace(opts *Options, meta *pulledContractMeta) (*p
 		meta.SchemaVersion = schemaVersion
 	}
 
-	if err := upsertLockForPull(opts, meta, hash); err != nil {
+	if err := upsertLockForPull(runtime, meta, hash); err != nil {
 		return nil, err
 	}
 
 	return &pullWriteResult{Path: writtenPath, ContentHash: hash}, nil
 }
 
-func upsertLockForPull(opts *Options, meta *pulledContractMeta, contentHash string) error {
-	lp := workspace.LockPath(opts.WorkingDir)
+func upsertLockForPull(runtime *Runtime, meta *pulledContractMeta, contentHash string) error {
+	lp := workspace.LockPath(runtime.WorkingDir)
 	lf, err := lock.Read(lp)
 	if err != nil {
 		return err
@@ -145,15 +149,15 @@ func upsertLockForPull(opts *Options, meta *pulledContractMeta, contentHash stri
 		Name:          meta.Name,
 		Version:       meta.Version,
 		SchemaVersion: meta.SchemaVersion,
-		Source:        opts.Source,
+		Source:        runtime.Source,
 		ContentHash:   contentHash,
 		LastSyncedAt:  time.Now().UTC().Format(time.RFC3339),
 	})
 	return lock.Write(lp, lf)
 }
 
-func printPullOutput(cmd *cobra.Command, opts *Options, meta *pulledContractMeta, writeResult *pullWriteResult) error {
-	format, err := output.ParseFormat(opts.Format)
+func printPullOutput(cmd *cobra.Command, runtime *Runtime, meta *pulledContractMeta, writeResult *pullWriteResult) error {
+	format, err := output.ParseFormat(runtime.Format)
 	if err != nil {
 		return err
 	}
@@ -163,7 +167,7 @@ func printPullOutput(cmd *cobra.Command, opts *Options, meta *pulledContractMeta
 			"name":          meta.Name,
 			"version":       meta.Version,
 			"schemaVersion": meta.SchemaVersion,
-			"source":        opts.Source,
+			"source":        runtime.Source,
 			"path":          writeResult.Path,
 			"contentHash":   writeResult.ContentHash,
 		})

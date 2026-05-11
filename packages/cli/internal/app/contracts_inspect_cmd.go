@@ -3,8 +3,6 @@ package app
 import (
 	"fmt"
 
-	"github.com/phuhh98/sloth/packages/cli/pkg/config"
-	"github.com/phuhh98/sloth/packages/cli/pkg/host"
 	"github.com/phuhh98/sloth/packages/cli/pkg/output"
 	"github.com/spf13/cobra"
 )
@@ -14,12 +12,11 @@ func newContractsInspectCommand(opts *Options) *cobra.Command {
 		Use:   "inspect",
 		Short: "Inspect host plugin and schema status",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			_, profileName, profile, err := opts.ResolveConfig()
+			runtime, err := opts.BuildRuntime()
 			if err != nil {
 				return err
 			}
-			token := config.EffectiveToken(profile, opts.TokenOverride)
-			client := host.NewClient(profile.Host, token)
+			client := runtime.HostClient("")
 
 			status, err := client.PluginStatus()
 			if err != nil {
@@ -30,19 +27,19 @@ func newContractsInspectCommand(opts *Options) *cobra.Command {
 				return err
 			}
 
-			format, err := output.ParseFormat(opts.Format)
+			format, err := output.ParseFormat(runtime.Format)
 			if err != nil {
 				return err
 			}
 			if format == output.FormatJSON {
 				return output.PrintJSON(cmd.OutOrStdout(), map[string]any{
-					"profile": profileName,
+					"profile": runtime.ProfileName,
 					"status":  status,
 					"schema":  schema,
 				})
 			}
 
-			if _, err := fmt.Fprintf(cmd.OutOrStdout(), "profile=%s host=%s\n", profileName, profile.Host); err != nil {
+			if _, err := fmt.Fprintf(cmd.OutOrStdout(), "profile=%s host=%s\n", runtime.ProfileName, runtime.Profile.Host); err != nil {
 				return err
 			}
 			rows := [][]string{{status.PluginName, status.PluginVersion, fmt.Sprintf("%d", status.TotalComponents), schema.SchemaVersion, schema.SchemaURL}}

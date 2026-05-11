@@ -26,23 +26,7 @@ func newContractsAddCommand(opts *Options) *cobra.Command {
 			if !addAll {
 				return fmt.Errorf("use one of: add --all | add component --name <name> | add set --name <set>")
 			}
-			if err := workspace.Init(opts.WorkingDir); err != nil {
-				return err
-			}
-
-			resolver := opts.Resolver()
-			contracts, err := resolver.ListContracts(opts.PluginVersion)
-			if err != nil {
-				return err
-			}
-
-			payloads := make([]map[string]any, 0, len(contracts))
-			names := make([]string, 0, len(contracts))
-			for _, contract := range contracts {
-				payloads = append(payloads, contract.Payload)
-				names = append(names, contract.Name)
-			}
-			return addContracts(cmd, opts, payloads, names, "all")
+			return runAddAll(cmd, opts)
 		},
 	}
 
@@ -53,15 +37,7 @@ func newContractsAddCommand(opts *Options) *cobra.Command {
 			if strings.TrimSpace(componentName) == "" {
 				return fmt.Errorf("--name is required")
 			}
-			if err := workspace.Init(opts.WorkingDir); err != nil {
-				return err
-			}
-			resolver := opts.Resolver()
-			match, err := resolver.GetContract(opts.PluginVersion, componentName)
-			if err != nil {
-				return err
-			}
-			return addContracts(cmd, opts, []map[string]any{match.Payload}, []string{match.Name}, "component")
+			return runAddComponent(cmd, opts, componentName)
 		},
 	}
 	componentCmd.Flags().StringVar(&componentName, "name", "", "Component contract name")
@@ -73,29 +49,7 @@ func newContractsAddCommand(opts *Options) *cobra.Command {
 			if strings.TrimSpace(setName) == "" {
 				return fmt.Errorf("--name is required")
 			}
-			if err := workspace.Init(opts.WorkingDir); err != nil {
-				return err
-			}
-
-			names, err := loadSetContractNames(opts.WorkingDir, setName)
-			if err != nil {
-				return err
-			}
-			if len(names) == 0 {
-				return fmt.Errorf("set %q does not include any contracts", setName)
-			}
-
-			resolver := opts.Resolver()
-			payloads := make([]map[string]any, 0, len(names))
-			for _, name := range names {
-				match, err := resolver.GetContract(opts.PluginVersion, name)
-				if err != nil {
-					return err
-				}
-				payloads = append(payloads, match.Payload)
-			}
-
-			return addContracts(cmd, opts, payloads, names, "set")
+			return runAddSet(cmd, opts, setName)
 		},
 	}
 	setCmd.Flags().StringVar(&setName, "name", "", "Contract set name")
@@ -107,8 +61,70 @@ func newContractsAddCommand(opts *Options) *cobra.Command {
 	return cmd
 }
 
-func addContracts(cmd *cobra.Command, opts *Options, payloads []map[string]any, names []string, mode string) error {
-	lp := workspace.LockPath(opts.WorkingDir)
+func runAddAll(cmd *cobra.Command, opts *Options) error {
+	runtime, err := opts.BuildRuntime()
+	if err != nil {
+		return err
+	}
+	if err := workspace.Init(runtime.WorkingDir); err != nil {
+		return err
+	}
+	contracts, err := runtime.Resolver.ListContracts(runtime.PluginVersion)
+	if err != nil {
+		return err
+	}
+	payloads := make([]map[string]any, 0, len(contracts))
+	names := make([]string, 0, len(contracts))
+	for _, c := range contracts {
+		payloads = append(payloads, c.Payload)
+		names = append(names, c.Name)
+	}
+	return addContracts(cmd, runtime, payloads, names, "all")
+}
+
+func runAddComponent(cmd *cobra.Command, opts *Options, componentName string) error {
+	runtime, err := opts.BuildRuntime()
+	if err != nil {
+		return err
+	}
+	if err := workspace.Init(runtime.WorkingDir); err != nil {
+		return err
+	}
+	match, err := runtime.Resolver.GetContract(runtime.PluginVersion, componentName)
+	if err != nil {
+		return err
+	}
+	return addContracts(cmd, runtime, []map[string]any{match.Payload}, []string{match.Name}, "component")
+}
+
+func runAddSet(cmd *cobra.Command, opts *Options, setName string) error {
+	runtime, err := opts.BuildRuntime()
+	if err != nil {
+		return err
+	}
+	if err := workspace.Init(runtime.WorkingDir); err != nil {
+		return err
+	}
+	names, err := loadSetContractNames(runtime.WorkingDir, setName)
+	if err != nil {
+		return err
+	}
+	if len(names) == 0 {
+		return fmt.Errorf("set %q does not include any contracts", setName)
+	}
+	payloads := make([]map[string]any, 0, len(names))
+	for _, name := range names {
+		match, err := runtime.Resolver.GetContract(runtime.PluginVersion, name)
+		if err != nil {
+			return err
+		}
+		payloads = append(payloads, match.Payload)
+	}
+	return addContracts(cmd, runtime, payloads, names, "set")
+}
+
+func addContracts(cmd *cobra.Command, runtime *Runtime, payloads []map[string]any, names []string, mode string) error {
+	lp := workspace.LockPath(runtime.WorkingDir)
 	lf, err := lock.Read(lp)
 	if err != nil {
 		return err
@@ -116,7 +132,7 @@ func addContracts(cmd *cobra.Command, opts *Options, payloads []map[string]any, 
 
 	written := make([]map[string]string, 0, len(payloads))
 	for _, payload := range payloads {
-		path, hash, schemaVersion, err := workspace.SaveContract(opts.WorkingDir, payload)
+		path, hash, schemaVersion, err := workspace.SaveContract(runtime.WorkingDir, payload)
 		if err != nil {
 			return err
 		}
@@ -126,7 +142,7 @@ func addContracts(cmd *cobra.Command, opts *Options, payloads []map[string]any, 
 			Name:          name,
 			Version:       version,
 			SchemaVersion: schemaVersion,
-			Source:        opts.Source,
+			Source:        runtime.Source,
 			ContentHash:   hash,
 			LastSyncedAt:  time.Now().UTC().Format(time.RFC3339),
 		})
@@ -137,7 +153,7 @@ func addContracts(cmd *cobra.Command, opts *Options, payloads []map[string]any, 
 		return err
 	}
 
-	format, err := output.ParseFormat(opts.Format)
+	format, err := output.ParseFormat(runtime.Format)
 	if err != nil {
 		return err
 	}
@@ -147,7 +163,7 @@ func addContracts(cmd *cobra.Command, opts *Options, payloads []map[string]any, 
 			"count":  len(payloads),
 			"names":  names,
 			"saved":  written,
-			"source": opts.Source,
+			"source": runtime.Source,
 		})
 	}
 
