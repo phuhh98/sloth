@@ -2,7 +2,7 @@
 purpose: "Track current implementation status mapped to roadmap and priorities defined in docs/IDEAS.md."
 status: "active"
 owner: "project-core"
-last_updated: "2026-05-10"
+last_updated: "2026-05-12"
 related_docs:
   - "docs/IDEAS.md"
   - "docs/REGISTRY.md"
@@ -61,6 +61,7 @@ Notes:
 - implemented config-driven publish package generation and Taskfile release-prep commands
 - added CLI tests and public docs pages at `apps/docs/docs/cli-*.md`
 - **follow-up required:** set up GitHub Actions CI workflow for npm publishing, configure npm publishing credentials, and automate version tagging per release
+- **follow-up required:** correct CLI schema fetch and verify behaviour — `contracts verify` only does semver range checks; with schema artifacts now published to GHCR (`ghcr.io/<owner>/sloth/schemas/component-contract:<version>`), the CLI must fetch the JSON schema document from OCI and validate the contract payload structure against it; schema registry path must also be configurable (separate from the contracts artifact path); tracked in `docs/KANBAN-CLI-SCHEMA-FETCH-VERIFY.md`
 
 ## Milestone 3
 
