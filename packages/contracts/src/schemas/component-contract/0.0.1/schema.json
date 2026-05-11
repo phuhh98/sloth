@@ -1,42 +1,202 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://phuhh98.github.io/sloth/schemas/component-contract/0.0.1/schema.json",
+  "$id": "sloth/schemas/component-contract/v0.0.1",
   "title": "Sloth Component Contract",
   "type": "object",
-  "required": ["name", "label", "kind", "version", "schemaVersion", "dataset"],
+  "required": ["name", "label", "kind", "schemaVersion", "dataset"],
   "additionalProperties": false,
   "properties": {
     "$schema": {
-      "type": "string"
+      "type": "string",
+      "description": "URL of the JSON schema used for validation"
     },
     "name": {
       "type": "string",
+      "description": "Component name following kebab-case convention, e.g. 'hero-section', 'product-carousel'.\nMust be unique across the system as it serves as the primary identifier for the component.",
       "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
     },
     "label": {
       "type": "string",
+      "description": "Component label to be displayed on the template UI.",
       "minLength": 1
     },
     "kind": {
       "type": "string",
+      "description": "Type of the component which determines where it can be used.\n'layout' – top-level container. Defines a named zone grid. Required to have layoutConfig.\n'section' – standalone full-width component, or placed inside a layout zone with sectionConfig.\n'block'   – always placed inside a layout zone. Required to have blockConfig.",
       "enum": ["layout", "section", "block"]
     },
-    "componentKind": {
-      "type": "string",
-      "description": "Business-purpose classifier such as CTA, Carousel, HeroSection"
-    },
-    "version": {
-      "type": "string",
-      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
-    },
     "schemaVersion": {
-      "type": "string"
+      "const": "0.0.1",
+      "default": "0.0.1",
+      "description": "Contract format version. Locked to '0.0.1' by this schema file — any contract validated here is implicitly version 0.0.1.\nThe Sloth plugin uses this to select the correct compatibility layer. When the format is bumped, a new schema file is published with an updated const."
     },
     "category": {
-      "type": "string"
+      "type": "string",
+      "description": "Puck category for grouping components. This helps in organizing and filtering components within the system."
+    },
+    "layoutConfig": {
+      "type": "object",
+      "description": "Grid and responsive configuration. Required when kind is 'layout'.\nDefines the 12-column Tailwind grid, full-width override (header/footer), per-breakpoint stacking behaviour, and optionally named drop zones.\n\nTwo layout modes:\n'open-canvas' (zones omitted) – no named DropZones. The renderer exposes a single implicit drop area spanning all columns. Blocks are placed freely; the grid wraps them automatically (Tailwind flex-wrap or grid auto-flow). Suitable for generic containers where placement order is flexible.\n'zoned'       (zones present) – one or more named Puck DropZones. Each zone occupies a declared column span. Blocks target a specific zone by its key.",
+      "required": ["columns"],
+      "additionalProperties": false,
+      "properties": {
+        "columns": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 12,
+          "description": "Total number of columns in the layout grid (Tailwind grid-cols-{n}).\nHeader and footer layouts should set fullWidth: true instead of manipulating columns."
+        },
+        "fullWidth": {
+          "type": "boolean",
+          "description": "When true the layout expands to full viewport width (Tailwind w-full), bypassing the column grid.\nUse for header and footer components that must span the entire screen."
+        },
+        "gap": {
+          "type": "string",
+          "enum": ["none", "xs", "sm", "md", "lg", "xl"],
+          "description": "Default gap between zones (Tailwind gap-{n}).\n'none' – gap-0  (0 px).\n'xs'   – gap-1  (4 px).\n'sm'   – gap-2  (8 px).\n'md'   – gap-4  (16 px, default when omitted).\n'lg'   – gap-6  (24 px).\n'xl'   – gap-8  (32 px)."
+        },
+        "responsive": {
+          "type": "array",
+          "description": "Per-breakpoint overrides for columns, gap, and zone stacking behaviour (mobile-first). Omit an entry to inherit the previous breakpoint's values.",
+          "items": {
+            "type": "object",
+            "required": ["breakpoint", "behavior"],
+            "additionalProperties": false,
+            "properties": {
+              "breakpoint": {
+                "type": "string",
+                "enum": ["mobile", "tablet", "desktop"],
+                "description": "Tailwind responsive prefix tier (mobile-first).\n'mobile'  – no prefix  (< 768 px, applies to all screens by default).\n'tablet'  – md:        (≥ 768 px).\n'desktop' – xl:        (≥ 1280 px)."
+              },
+              "columns": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 12,
+                "description": "Override grid columns at this breakpoint (Tailwind md:grid-cols-{n} / xl:grid-cols-{n}). Omit to inherit from the previous breakpoint or layoutConfig.columns."
+              },
+              "gap": {
+                "type": "string",
+                "enum": ["none", "xs", "sm", "md", "lg", "xl"],
+                "description": "Override gap at this breakpoint (Tailwind md:gap-{n} / xl:gap-{n}). Omit to inherit from the previous breakpoint or layoutConfig.gap."
+              },
+              "behavior": {
+                "type": "string",
+                "enum": ["default", "wrap", "stack-left", "stack-right"],
+                "description": "Zone layout behaviour at this breakpoint (rendered via Tailwind flex/grid utilities).\n'default'     – inherit the parent or previous breakpoint behaviour.\n'wrap'        – zones wrap onto the next row when they don't fit (Tailwind flex-wrap or grid auto-flow).\n'stack-left'  – leftmost zone lifts to top, rest fills below (Tailwind order-first / col-span-full).\n'stack-right' – rightmost zone lifts to top, rest fills below (Tailwind order-last / col-span-full)."
+              }
+            }
+          }
+        },
+        "zones": {
+          "type": "array",
+          "description": "Named Puck DropZones and their column-span assignments. The key is a free identifier chosen by the contract author (e.g. 'left', 'main', 'sidebar'). The sum of all spans should not exceed layoutConfig.columns.\n\nOmit entirely for open-canvas mode — the renderer creates one implicit drop area across all columns and blocks wrap freely. An explicit empty array [] is not meaningful; omit zones rather than passing [].",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["key", "span"],
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "type": "string",
+                "pattern": "^[a-zA-Z][a-zA-Z0-9_]*$",
+                "description": "Zone identifier chosen by the contract author. Referenced by the renderer to render the correct Puck DropZone."
+              },
+              "span": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 12,
+                "description": "Number of grid columns this zone occupies at the default (desktop) breakpoint (Tailwind col-span-{n})."
+              }
+            }
+          }
+        }
+      }
+    },
+    "blockConfig": {
+      "type": "object",
+      "description": "Grid placement configuration. Required when kind is 'block'.\nDefines how many columns and rows the block occupies within its parent layout zone.\nZone stacking and reordering is controlled by the parent layout's layoutConfig.responsive — blocks do not repeat it.",
+      "required": ["colSpan"],
+      "additionalProperties": false,
+      "properties": {
+        "colSpan": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 12,
+          "description": "Number of grid columns this block occupies in its parent zone (Tailwind col-span-{n})."
+        },
+        "rowSpan": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of grid rows this block spans (Tailwind row-span-{n}). Optional — omit to let the zone wrap blocks naturally."
+        },
+        "responsive": {
+          "type": "array",
+          "description": "Per-breakpoint overrides for colSpan and rowSpan only. Zone stacking is inherited from the parent layout.",
+          "items": {
+            "type": "object",
+            "required": ["breakpoint"],
+            "additionalProperties": false,
+            "properties": {
+              "breakpoint": {
+                "type": "string",
+                "enum": ["mobile", "tablet", "desktop"],
+                "description": "Tailwind responsive prefix tier (mobile-first).\n'mobile'  – no prefix  (< 768 px).\n'tablet'  – md:        (≥ 768 px).\n'desktop' – xl:        (≥ 1280 px)."
+              },
+              "colSpan": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 12,
+                "description": "Override colSpan at this breakpoint (Tailwind md:col-span-{n} / xl:col-span-{n})."
+              },
+              "rowSpan": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Override rowSpan at this breakpoint (Tailwind md:row-span-{n} / xl:row-span-{n})."
+              }
+            }
+          }
+        }
+      }
+    },
+    "sectionConfig": {
+      "type": "object",
+      "description": "Optional grid placement configuration for section components.\nOmit entirely when the section is used standalone — the renderer defaults to col-span-full.\nProvide when the section is placed inside a layout zone so the renderer knows its column width.",
+      "required": ["colSpan"],
+      "additionalProperties": false,
+      "properties": {
+        "colSpan": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 12,
+          "description": "Number of grid columns this section occupies in its parent layout zone (Tailwind col-span-{n})."
+        },
+        "responsive": {
+          "type": "array",
+          "description": "Per-breakpoint colSpan overrides. Only relevant when the section is placed inside a layout zone.",
+          "items": {
+            "type": "object",
+            "required": ["breakpoint"],
+            "additionalProperties": false,
+            "properties": {
+              "breakpoint": {
+                "type": "string",
+                "enum": ["mobile", "tablet", "desktop"],
+                "description": "Tailwind responsive prefix tier (mobile-first).\n'mobile'  – no prefix  (< 768 px).\n'tablet'  – md:        (≥ 768 px).\n'desktop' – xl:        (≥ 1280 px)."
+              },
+              "colSpan": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 12,
+                "description": "Override colSpan at this breakpoint (Tailwind md:col-span-{n} / xl:col-span-{n})."
+              }
+            }
+          }
+        }
+      }
     },
     "dataset": {
       "type": "array",
+      "description": "Defines the data fields the Strapi plugin will generate for this component.\nEach item maps to one Strapi field. When a page is composed and fetched by the frontend,\nthe plugin serializes each field into a flat key-value map in the page response.\nThe 'key' of each item is the identifier used in that flat map.",
       "minItems": 1,
       "items": {
         "type": "object",
@@ -45,42 +205,96 @@
         "properties": {
           "key": {
             "type": "string",
-            "pattern": "^[a-zA-Z][a-zA-Z0-9_]*$"
+            "pattern": "^[a-zA-Z][a-zA-Z0-9_]*$",
+            "description": "Unique field identifier within this component. Becomes the key in the flat page response map.\nUsed by the frontend to read this field's value from the composed page data."
           },
           "label": {
-            "type": "string"
+            "type": "string",
+            "description": "Human-readable label shown in the Strapi admin UI and the Puck editor."
           },
           "type": {
             "type": "string",
-            "enum": ["string", "number", "option", "dynamic"]
+            "enum": ["string", "number", "option", "relation", "dynamic"],
+            "description": "Determines the Strapi field type generated and how the plugin serializes its value.\n'string'   – Strapi text field. Free-form text input.\n'number'   – Strapi number field. Numeric input.\n'option'   – Strapi enumeration field. Requires options[]. Value is one of the defined option values.\n'relation' – Strapi relation field. References content-type entries. Requires relationConfig.\n'dynamic'  – Reserved for future dynamic rendering. Details TBD."
           },
           "required": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "When true, the Strapi field is marked required and the Puck editor enforces a non-empty value."
           },
           "options": {
             "type": "array",
+            "description": "Enumerated choices for fields of type 'option'. Each entry maps to a value in the Strapi enumeration field.",
+            "minItems": 1,
             "items": {
               "type": "object",
               "required": ["label", "value"],
               "additionalProperties": false,
               "properties": {
-                "label": { "type": "string" },
-                "value": {}
+                "label": {
+                  "type": "string",
+                  "description": "Display label shown in the Puck editor dropdown."
+                },
+                "value": {
+                  "type": "string",
+                  "description": "Stored value written to Strapi and returned in the page response flat map."
+                }
               }
             }
           },
-          "value": {},
-          "valueDropdown": {
+          "value": {
+            "description": "Default value pre-populated in the Puck editor when the component is first added to a page."
+          },
+          "relationConfig": {
             "type": "object",
-            "required": ["contentType", "path"],
+            "description": "Configuration for fields of type 'relation'.\nTwo resolution modes:\n'scalar'     – plugin extracts a single field via 'path' and returns it as a primitive in the flat map.\n'documentId' – plugin returns the Strapi documentId. Renderer is responsible for fetching the full entry.",
+            "required": ["contentType", "resolve"],
             "additionalProperties": false,
             "properties": {
-              "contentType": { "type": "string" },
-              "path": { "type": "string" },
-              "multiple": { "type": "boolean" }
-            }
+              "contentType": {
+                "type": "string",
+                "description": "Strapi content-type UID to relate to (e.g. 'api::article.article')."
+              },
+              "resolve": {
+                "type": "string",
+                "enum": ["scalar", "documentId"],
+                "description": "Resolution strategy for the relation value in the page response flat map.\n'scalar'     – requires 'path'. Plugin extracts that field and returns a primitive (or array of primitives when multiple: true).\n'documentId' – no 'path' needed. Plugin returns the documentId string (or array of documentId strings when multiple: true)."
+              },
+              "path": {
+                "type": "string",
+                "description": "Required when resolve is 'scalar'. Dot-notation path to a scalar field on the related entry.\nExamples: 'title' → 'My Article Title',  'image.url' → 'https://cdn.example.com/img.jpg'."
+              },
+              "multiple": {
+                "type": "boolean",
+                "description": "When true the field holds many related entries.\n'scalar' + multiple    → flat map value is an array of scalars, e.g. ['News', 'Tech'].\n'documentId' + multiple → flat map value is an array of documentId strings, e.g. ['abc123', 'def456'].\nOmit (or false) for a single value."
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": { "resolve": { "const": "scalar" } },
+                  "required": ["resolve"]
+                },
+                "then": { "required": ["path"] }
+              }
+            ]
           }
-        }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": { "type": { "const": "option" } },
+              "required": ["type"]
+            },
+            "then": { "required": ["options"] }
+          },
+          {
+            "if": {
+              "properties": { "type": { "const": "relation" } },
+              "required": ["type"]
+            },
+            "then": { "required": ["relationConfig"] }
+          }
+        ]
       }
     },
     "renderMeta": {
@@ -88,9 +302,27 @@
       "required": ["rendererKey"],
       "additionalProperties": false,
       "properties": {
-        "rendererKey": { "type": "string" },
-        "supportsChildren": { "type": "boolean" }
+        "rendererKey": {
+          "type": "string",
+          "description": "Key used by the frontend renderer to look up the React component for this contract. Must match the registered renderer key in the frontend component map."
+        }
       }
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "kind": { "const": "layout" } },
+        "required": ["kind"]
+      },
+      "then": { "required": ["layoutConfig"] }
+    },
+    {
+      "if": {
+        "properties": { "kind": { "const": "block" } },
+        "required": ["kind"]
+      },
+      "then": { "required": ["blockConfig"] }
+    }
+  ]
 }
