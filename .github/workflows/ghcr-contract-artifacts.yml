@@ -65,16 +65,6 @@ jobs:
       - name: Build registry artifacts
         run: pnpm --filter @sloth/contracts run build:registry
 
-      - name: Verify docs-hosted schema parity
-        run: pnpm --filter @sloth/contracts run check:schemas:docs -- --version "${{ steps.version.outputs.version }}"
-
-      - name: Build OCI contracts payload
-        run: |
-          set -euo pipefail
-          node ./packages/contracts/scripts/build-oci-release-payload.mjs \
-            --version "${{ steps.version.outputs.version }}" \
-            --out ./packages/contracts/dist/registry/contracts-release.json
-
       - name: Verify schema artifact path
         shell: bash
         run: |
@@ -84,6 +74,16 @@ jobs:
             echo "Missing schema artifact: $schema_path" >&2
             exit 1
           fi
+
+      - name: Verify docs-hosted schema parity
+        run: pnpm --filter @sloth/contracts run check:schemas:docs -- --version "${{ steps.version.outputs.version }}"
+
+      - name: Build OCI contracts payload
+        run: |
+          set -euo pipefail
+          node ./packages/contracts/scripts/build-oci-release-payload.mjs \
+            --version "${{ steps.version.outputs.version }}" \
+            --out ./packages/contracts/dist/registry/contracts-release.json
 
       - name: Setup ORAS
         uses: oras-project/setup-oras@v1
