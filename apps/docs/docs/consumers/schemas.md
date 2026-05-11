@@ -66,4 +66,4 @@ Example versioned contract release artifacts:
 - Registry artifacts should be immutable per version as well.
 - Publish new versions at new paths instead of replacing existing files.
 - GHCR is the immutable artifact/provenance backend; docs URL is the canonical `$schema` endpoint for validators/editors.
-- During docs build/release, sync promoted schema versions from GHCR artifacts into `apps/docs/static/schemas/...` before compiling Docusaurus output.
+- Schema files are committed statically into `apps/docs/static/schemas/`. The GHCR release workflow verifies parity between the committed schemas and the artifacts being pushed — it does not pull from GHCR during docs build.

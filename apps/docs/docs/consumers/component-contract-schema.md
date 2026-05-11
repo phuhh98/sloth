@@ -412,12 +412,12 @@ flowchart LR
     SP --> SV["Plugin extracts\nrelatedEntry.title"]
     SV --> SM{"multiple?"}
     SM --> |"false"| SS["flat map value:\n\"My Article Title\""]
-    SM --> |"true"| SA["flat map value:\n[\"Title A\", \"Title B\"]"]
+    SM --> |"true"| SA["flat map value:\n[&quot;Title A&quot;, &quot;Title B&quot;]"]
 
     RQ --> |"documentId"| DV["Plugin returns\nrelatedEntry.documentId"]
     DV --> DM{"multiple?"}
     DM --> |"false"| DS["flat map value:\n\"abc123\""]
-    DM --> |"true"| DA["flat map value:\n[\"abc123\", \"def456\"]"]
+    DM --> |"true"| DA["flat map value:\n[&quot;abc123&quot;, &quot;def456&quot;]"]
 
     style SP fill:#e8f4fd,color:#333
     style DV fill:#e8f4fd,color:#333

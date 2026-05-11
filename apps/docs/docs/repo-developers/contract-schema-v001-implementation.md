@@ -39,11 +39,11 @@ The docs-hosted URL is the canonical `$schema` endpoint. Validators, editors, an
 
 The top-level `allOf` enforces:
 
-| `kind`      | Required config                                                         |
-| ----------- | ----------------------------------------------------------------------- |
+| `kind`      | Required config                                                                                             |
+| ----------- | ----------------------------------------------------------------------------------------------------------- |
 | `"layout"`  | `layoutConfig` — two modes: **open-canvas** (`zones` omitted) or **zoned** (`zones` present, `minItems: 1`) |
-| `"block"`   | `blockConfig`                                                           |
-| `"section"` | `sectionConfig` optional — omit for standalone, provide for zone-placed |
+| `"block"`   | `blockConfig`                                                                                               |
+| `"section"` | `sectionConfig` optional — omit for standalone, provide for zone-placed                                     |
 
 ```mermaid
 flowchart TD
@@ -142,10 +142,10 @@ flowchart LR
         S4["Fetches related entry\nreturns .documentId"]
     end
     subgraph flatmap["Page response flat map"]
-        R1["{headline: \"Buy Now\"}"]
-        R2["{category: \"news\"}"]
-        R3["{article: \"My Article Title\"}"]
-        R4["{relatedId: \"abc123\"}"]
+        R1["{headline: &quot;Buy Now&quot;}"]
+        R2["{category: &quot;news&quot;}"]
+        R3["{article: &quot;My Article Title&quot;}"]
+        R4["{relatedId: &quot;abc123&quot;}"]
     end
     F1 --> S1 --> R1
     F2 --> S2 --> R2
