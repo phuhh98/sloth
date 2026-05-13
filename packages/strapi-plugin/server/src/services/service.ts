@@ -1,4 +1,5 @@
 import type { Core } from '@strapi/strapi';
+import slothContract from '@sloth/contracts';
 
 type GenericRecord = Record<string, unknown>;
 
@@ -18,25 +19,7 @@ const DEFAULT_SCHEMA_VERSION = '0.0.1';
 const DEFAULT_PLUGIN_VERSION = '0.0.0';
 const SCHEMA_INSPECTION_PATH = '/sloth/inspection/contract-schema';
 
-const COMPONENT_CONTRACT_SCHEMA = {
-  $schema: 'https://json-schema.org/draft/2020-12/schema',
-  $id: 'https://phuhh98.github.io/sloth/schemas/component-contract/0.0.1/schema.json',
-  title: 'Sloth Component Contract',
-  type: 'object',
-  required: ['name', 'label', 'kind', 'version', 'schemaVersion'],
-  properties: {
-    $schema: { type: 'string' },
-    name: { type: 'string' },
-    label: { type: 'string' },
-    kind: { type: 'string', enum: ['layout', 'section', 'block'] },
-    componentKind: { type: 'string' },
-    version: { type: 'string' },
-    schemaVersion: { type: 'string' },
-    category: { type: 'string' },
-    dataset: { type: 'array' },
-    renderMeta: { type: 'object' },
-  },
-};
+const COMPONENT_CONTRACT_SCHEMA = slothContract.schemas.componentContract;
 
 const service = ({ strapi }: { strapi: Core.Strapi }) => ({
   async getPluginStatus() {

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://phuhh98.github.io/sloth/schemas/component-contract/0.0.1/schema.json",
+  "schemaVersion": "0.0.1",
+  "name": "section-hero-banner",
+  "label": "Hero Banner",
+  "kind": "section",
+  "category": "Section",
+  "sectionConfig": {
+    "colSpan": 12,
+    "responsive": [
+      { "breakpoint": "mobile", "colSpan": 12 },
+      { "breakpoint": "tablet", "colSpan": 12 }
+    ]
+  },
+  "dataset": [
+    { "key": "title", "label": "Title", "type": "string", "required": true },
+    { "key": "subtitle", "label": "Subtitle", "type": "string" },
+    {
+      "key": "image",
+      "label": "Image",
+      "type": "relation",
+      "relationConfig": {
+        "contentType": "api::asset.asset",
+        "resolve": "scalar",
+        "path": "url"
+      }
+    }
+  ]
+}

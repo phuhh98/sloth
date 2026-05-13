@@ -45,6 +45,7 @@
     "react-intl": "^6.8.9",
     "react-router-dom": "^6.30.3",
     "styled-components": "^6.4.1",
+    "tslib": "2",
     "typescript": "^5.9.3"
   },
   "peerDependencies": {
@@ -67,5 +68,10 @@
   "name": "@sloth/strapi-plugin",
   "description": "Sloth - Content management for the lazy",
   "license": "MIT",
-  "author": "phuhuynh <phuhh98@gmail.com>"
+  "author": "phuhuynh <phuhh98@gmail.com>",
+  "dependencies": {
+    "@puckeditor/core": "^0.21.2",
+    "@sloth/contracts": "workspace:*",
+    "ajv": "^8.20.0"
+  }
 }

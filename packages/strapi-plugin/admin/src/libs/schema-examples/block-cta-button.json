@@ -1,0 +1,28 @@
+{
+  "$schema": "https://phuhh98.github.io/sloth/schemas/component-contract/0.0.1/schema.json",
+  "schemaVersion": "0.0.1",
+  "name": "block-cta-button",
+  "label": "CTA Button",
+  "kind": "block",
+  "category": "Block",
+  "blockConfig": {
+    "colSpan": 4,
+    "responsive": [
+      { "breakpoint": "mobile", "colSpan": 12 },
+      { "breakpoint": "tablet", "colSpan": 6 }
+    ]
+  },
+  "dataset": [
+    { "key": "text", "label": "Button Text", "type": "string", "required": true },
+    { "key": "url", "label": "Target URL", "type": "string", "required": true },
+    {
+      "key": "style",
+      "label": "Style",
+      "type": "option",
+      "options": [
+        { "label": "Primary", "value": "primary" },
+        { "label": "Secondary", "value": "secondary" }
+      ]
+    }
+  ]
+}

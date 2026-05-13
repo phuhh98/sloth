@@ -1,0 +1,31 @@
+{
+  "$schema": "https://phuhh98.github.io/sloth/schemas/component-contract/0.0.1/schema.json",
+  "schemaVersion": "0.0.1",
+  "name": "layout-main-aside",
+  "label": "Main + Aside Layout",
+  "kind": "layout",
+  "category": "Layout",
+  "layoutConfig": {
+    "columns": 12,
+    "gap": "md",
+    "zones": [
+      { "key": "main", "span": 8 },
+      { "key": "aside", "span": 4 }
+    ],
+    "responsive": [
+      { "breakpoint": "mobile", "behavior": "stack-left" },
+      { "breakpoint": "tablet", "behavior": "default" }
+    ]
+  },
+  "dataset": [
+    {
+      "key": "background",
+      "label": "Background Color",
+      "type": "option",
+      "options": [
+        { "label": "White", "value": "white" },
+        { "label": "Gray", "value": "gray" }
+      ]
+    }
+  ]
+}
