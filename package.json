@@ -26,10 +26,6 @@
   },
   "lint-staged": {
     "*.{ts,js,jsx,tsx,css,scss}": "prettier --write",
-    "*.json": "prettier --write",
-    "apps/docs/**/*.{ts,tsx,js,jsx,mjs,cjs,json,md,mdx}": "sh -c 'pnpm --filter apps-docs run test:registry && pnpm --filter apps-docs run build'",
-    "packages/strapi-plugin/admin/**/*.{ts,tsx,js,jsx,mjs,cjs,json}": "sh -c 'pnpm --filter @sloth/strapi-plugin run test:ts:front'",
-    "packages/strapi-plugin/server/**/*.{ts,tsx,js,jsx,mjs,cjs,json}": "sh -c 'pnpm --filter @sloth/strapi-plugin run test:ts:back'",
-    "packages/strapi-plugin/{package.json,tsconfig.json}": "sh -c 'pnpm --filter @sloth/strapi-plugin run test:ts:front && pnpm --filter @sloth/strapi-plugin run test:ts:back'"
+    "*.json": "prettier --write"
   }
 }

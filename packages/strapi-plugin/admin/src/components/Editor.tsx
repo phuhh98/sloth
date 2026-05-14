@@ -1,5 +1,5 @@
 import { Puck, type Config } from '@puckeditor/core';
-import puckCss from '@puckeditor/core/dist/index.css?inline';
+import puckCss from '@puckeditor/core/dist/index.css';
 import { useEffect } from 'react';
 import { styled } from 'styled-components';
 

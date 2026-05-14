@@ -677,6 +677,39 @@ export interface PluginReviewWorkflowsWorkflowStage
   };
 }
 
+export interface PluginSlothStrapiPluginSlothComponentContract
+  extends Struct.CollectionTypeSchema {
+  collectionName: "sloth_component_contract";
+  info: {
+    displayName: "Sloth Component Contract";
+    pluralName: "sloth-component-contracts";
+    singularName: "sloth-component-contract";
+  };
+  options: {
+    comment: "";
+    draftAndPublish: false;
+  };
+  attributes: {
+    contract: Schema.Attribute.JSON &
+      Schema.Attribute.CustomField<"plugin::sloth-strapi-plugin.sloth-component-contract-schema">;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      "oneToMany",
+      "plugin::sloth-strapi-plugin.sloth-component-contract"
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface PluginUploadFile extends Struct.CollectionTypeSchema {
   collectionName: "files";
   info: {
@@ -956,6 +989,7 @@ declare module "@strapi/strapi" {
       "plugin::i18n.locale": PluginI18NLocale;
       "plugin::review-workflows.workflow": PluginReviewWorkflowsWorkflow;
       "plugin::review-workflows.workflow-stage": PluginReviewWorkflowsWorkflowStage;
+      "plugin::sloth-strapi-plugin.sloth-component-contract": PluginSlothStrapiPluginSlothComponentContract;
       "plugin::upload.file": PluginUploadFile;
       "plugin::upload.folder": PluginUploadFolder;
       "plugin::users-permissions.permission": PluginUsersPermissionsPermission;

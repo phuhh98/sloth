@@ -59,6 +59,14 @@ tasks:
     cmds:
       - "{{.CLI_ARGS}}"
 
+  strapi-cmd:
+    desc: |
+      Forward CLI args to any tool from Strapi project folder (usage: task strapi-cmd -- <tool> [args])
+      Examples: task strapi-cmd -- pnpm install <pkg>, task strapi-cmd -- pnpm run build
+    dir: ./apps/strapi
+    cmds:
+      - "{{.CLI_ARGS}}"
+
   # Internal tasks
   start-strapi-dev:
     desc: Start Strapi service in development mode

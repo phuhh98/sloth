@@ -1,6 +1,4 @@
-declare module '@strapi/design-system/*';
-declare module '@strapi/design-system';
-declare module '*.css?inline' {
+declare module '*.css' {
   const content: string;
   export default content;
 }

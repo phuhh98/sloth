@@ -1,5 +1,9 @@
 {
-    "plugin" : {
-        "name": "CHEAP"
+  "plugin": {
+    "name": "Sloth",
+    "contract-schema-input": {
+      "label": "Sloth Component Contract",
+      "description": "Define the contract of your component with Sloth"
     }
+  }
 }

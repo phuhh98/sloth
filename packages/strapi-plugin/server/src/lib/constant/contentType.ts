@@ -1,3 +1,4 @@
-export enum SLOTH_CONTENT_TYPE_KEY {
-  COMPONENT_CONTRACT = 'slothComponentContract',
-}
+import { kebabCase } from 'lodash';
+export const SLOTH_CONTENT_TYPE_KEY = {
+  COMPONENT_CONTRACT: kebabCase('slothComponentContract'),
+} as const;
