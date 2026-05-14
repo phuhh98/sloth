@@ -9,5 +9,6 @@
     "https://json-schema.org/": true,
     "https://developer.microsoft.com/json-schemas/": true,
     "https://phuhh98.github.io/sloth/schemas/": true
-  }
+  },
+  "typescript.preferences.importModuleSpecifier": "shortest"
 }

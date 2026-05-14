@@ -1,6 +1,7 @@
 import { Puck, type Config } from '@puckeditor/core';
 import puckCss from '@puckeditor/core/dist/index.css?inline';
 import { useEffect } from 'react';
+import { styled } from 'styled-components';
 
 // Create Puck component config
 const config: Config = {
