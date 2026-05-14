@@ -7,7 +7,7 @@
     "target": "esnext",
     "declaration": true,
     "declarationMap": true,
-    "emitDeclarationOnly": false,
+    "emitDeclarationOnly": true,
     "strict": true,
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
@@ -15,9 +15,11 @@
     "moduleDetection": "force",
     "skipLibCheck": true,
     "allowArbitraryExtensions": true,
+    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "ignoreDeprecations": "6.0"
   },
   "include": ["src/**/*", "src/types/**/*.d.ts"]
 }

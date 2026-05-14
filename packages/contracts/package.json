@@ -4,17 +4,20 @@
   "private": true,
   "type": "module",
   "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsc -p ./tsconfig.json",
+    "build": "tsup",
+    "dev": "tsup --watch",
     "generate-types": "node ./scripts/generate-types.js"
   },
   "devDependencies": {
     "glob": "^13.0.6",
     "json-schema-to-typescript": "^15.0.4",
+    "tsup": "^8.5.1",
     "typescript": "^6.0.3"
   }
 }
